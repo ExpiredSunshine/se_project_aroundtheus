@@ -1,21 +1,23 @@
 # Project 3: Around The U.S.
 
-### Overview  
+This is project 3 of the Triple Ten software engineer course. A site where users can upload, share, and collect photos of the United States scenery.
 
-* Intro  
-* Figma  
-* Images  
-  
-**Intro**
-  
-This project is made so all the elements are displayed correctly on popular screen sizes. We recommend investing more time in completing this project, since it's more difficult than previous ones.  
-  
-**Figma**  
-  
-* [Link to the project on Figma](https://www.figma.com/file/ii4xxsJ0ghevUOcssTlHZv/Sprint-3%3A-Around-the-US?node-id=0%3A1)  
-  
-**Images**  
-  
-The way you'll do this at work is by exporting images directly from Figma — we recommend doing that to practice more. Don't forget to optimize them [here](https://tinypng.com/), so your project loads faster. 
-  
-Good luck and have fun!
+The project displays well with any screen size and automatically adjusts sizes as needed.
+
+## Project features
+
+- Sematitic HTML5
+- Flexbox
+- Grid
+- BEM File and code managment
+
+**Figma**
+
+- [Link to the project design on Figma](https://www.figma.com/file/ii4xxsJ0ghevUOcssTlHZv/Sprint-3%3A-Around-the-US?node-id=0%3A1)
+
+## Possible Improvements
+
+- Make popups for text editing and image uploads.
+- Create user folder to see liked images.
+
+**-link to github pages once deployed-**
