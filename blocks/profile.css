@@ -4,8 +4,6 @@
   padding-top: 40px;
   max-width: 880px;
   width: 100%;
-  max-height: 120px;
-  height: 100%;
 }
 
 .profile__image {
@@ -20,14 +18,14 @@
   grid-template-areas:
     "name button"
     "description description";
-  grid-template-columns: minmax(auto, 375px) auto;
+  grid-template-columns: minmax(auto, auto-fit) auto;
 }
 
 .profile__name {
   font-family: "Inter", Arial, Helvetica, sans-serif;
   font-size: 42px;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.15;
   margin: 0;
   grid-area: name;
   text-overflow: ellipsis;
@@ -36,9 +34,7 @@
 }
 
 .profile__edit-button {
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-left: 18px;
+  margin: 16px auto auto 18px;
   padding: 0;
   width: 24px;
   height: 24px;
@@ -57,8 +53,6 @@
   font-size: 18px;
   font-weight: 400;
   line-height: 1.2;
-  max-width: 373px;
-  width: 100%;
   margin: 0;
   padding-top: 16px;
   grid-area: description;
@@ -85,7 +79,7 @@
 
 @media screen and (max-width: 770px) {
   .profile__edit-button {
-    margin-right: 18px;
+    margin: 7px 18px auto 18px;
   }
 
   .profile__name {
@@ -99,13 +93,9 @@
 
 @media screen and (max-width: 618px) {
   .profile {
-    display: flex;
     flex-direction: column;
-    align-items: center;
     margin-top: 42px;
     padding: 0;
-    max-height: fit-content;
-    height: 100%;
   }
 
   .profile__image {
@@ -139,7 +129,6 @@
 
   .profile__edit-button {
     margin: auto 0;
-    padding: 0;
     width: 18px;
     height: 18px;
   }

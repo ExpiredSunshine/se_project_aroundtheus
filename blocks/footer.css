@@ -1,7 +1,7 @@
 .footer {
   max-width: 282px;
-  display: flex;
   padding-top: 67px;
+  margin: 0;
 }
 
 .footer__copyright {
@@ -16,5 +16,9 @@
 @media screen and (max-width: 480px) {
   .footer {
     padding: 48px 19px 36px;
+  }
+
+  .footer__copyright {
+    font-size: 14px;
   }
 }

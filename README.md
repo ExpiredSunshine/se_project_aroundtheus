@@ -11,9 +11,9 @@ The project displays well with any screen size and automatically adjusts sizes a
 - Grid
 - BEM File and code managment
 
-**Figma**
+**Video**
 
-- [Link to the project design on Figma](https://www.figma.com/file/ii4xxsJ0ghevUOcssTlHZv/Sprint-3%3A-Around-the-US?node-id=0%3A1)
+https://drive.google.com/file/d/1cj3vUyzwCwKyfiA_oleEi3Cba5mInqjJ/view?usp=drive_link
 
 ## Possible Improvements
 
