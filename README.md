@@ -20,4 +20,5 @@ https://drive.google.com/file/d/1cj3vUyzwCwKyfiA_oleEi3Cba5mInqjJ/view?usp=drive
 - Make popups for text editing and image uploads.
 - Create user folder to see liked images.
 
-**-link to github pages once deployed-**
+**link to github pages**
+https://expiredsunshine.github.io/se_project_aroundtheus/
