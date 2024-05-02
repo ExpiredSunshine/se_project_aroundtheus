@@ -11,3 +11,9 @@
   grid-gap: 20px 17px;
   list-style-type: none;
 }
+
+@media screen and (max-width: 618px) {
+  .cards {
+    padding-top: 36px;
+  }
+}
