@@ -105,7 +105,6 @@
   .profile__info {
     flex-wrap: wrap;
     justify-content: center;
-    grid-template-columns: minmax(auto, 1fr) auto;
   }
 
   .profile__name {
