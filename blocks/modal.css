@@ -1,0 +1,22 @@
+.modal {
+  display: flex;
+}
+
+/* .modal_opened {
+  display: flex;
+} */
+
+.modal__container {
+}
+
+.modal__close {
+}
+
+.modal__heading {
+}
+
+.modal__form {
+}
+
+.modal__button {
+}
