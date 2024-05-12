@@ -1,5 +1,5 @@
 .modal {
-  display: flex;
+  display: none;
   color: #000;
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
@@ -11,9 +11,9 @@
   font-family: "Inter", Arial, Helvetica, sans-serif;
 }
 
-/* .modal_opened {
+.modal__opened {
   display: flex;
-} */
+}
 
 .modal__container {
   position: relative;
