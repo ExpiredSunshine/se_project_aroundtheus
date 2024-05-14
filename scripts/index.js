@@ -24,15 +24,48 @@ const initialCards = [
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
   },
 ];
-
+// -------------------------------------------------------------------------------------
+//                                     Elements
+// -------------------------------------------------------------------------------------
 const profileEditButton = document.querySelector("#profile__edit-button");
-const profileModal = document.querySelector("#modal");
+const profileModal = document.querySelector("#profile-edit-modal");
 const profileModalClose = document.querySelector("#modal__close");
+const profileName = document.querySelector(".profile__name");
+const profileDescription = document.querySelector(".profile__description");
+const profileNameInput = document.querySelector("#profile-name-input");
+const profileDescriptionInput = document.querySelector(
+  "#profile-description-input"
+);
+const profileEditForm = profileModal.querySelector(".modal__form");
 
+// -------------------------------------------------------------------------------------
+//                                     Event Listeners
+// -------------------------------------------------------------------------------------
 profileEditButton.addEventListener("click", () => {
+  profileNameInput.value = profileName.textContent;
+  profileDescriptionInput.value = profileDescription.textContent;
   profileModal.classList.add("modal__opened");
 });
 
 profileModalClose.addEventListener("click", () => {
-  profileModal.classList.remove("modal__opened");
+  closePopup();
 });
+
+profileEditForm.addEventListener("submit", handleProfileEditModal);
+
+// -------------------------------------------------------------------------------------
+//                                     Event Handlers
+// -------------------------------------------------------------------------------------
+function handleProfileEditModal(e) {
+  e.preventDefault();
+  profileName.textContent = profileNameInput.value;
+  profileDescription.textContent = profileDescriptionInput.value;
+  closePopup();
+}
+
+// -------------------------------------------------------------------------------------
+//                                     Functions
+// -------------------------------------------------------------------------------------
+function closePopup() {
+  profileModal.classList.remove("modal__opened");
+}
