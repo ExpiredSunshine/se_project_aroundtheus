@@ -1,26 +1,26 @@
 const initialCards = [
   {
-    name: "Yosemite Valley",
+    title: "Yosemite Valley",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
   },
   {
-    name: "Lake Louise",
+    title: "Lake Louise",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lake-louise.jpg",
   },
   {
-    name: "Bald Mountains",
+    title: "Bald Mountains",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/bald-mountains.jpg",
   },
   {
-    name: "Latemar",
+    title: "Latemar",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/latemar.jpg",
   },
   {
-    name: "Vanoise National Park",
+    title: "Vanoise National Park",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/vanoise.jpg",
   },
   {
-    name: "Lago di Braies",
+    title: "Lago di Braies",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
   },
 ];
@@ -37,6 +37,9 @@ const profileDescriptionInput = document.querySelector(
   "#profile-description-input"
 );
 const profileEditForm = profileModal.querySelector(".modal__form");
+const cardList = document.querySelector(".cards__list");
+const cardTemplate =
+  document.querySelector("#card-template").content.firstElementChild;
 
 // -------------------------------------------------------------------------------------
 //                                     Event Listeners
@@ -47,16 +50,19 @@ profileEditButton.addEventListener("click", () => {
   profileModal.classList.add("modal__opened");
 });
 
-profileModalClose.addEventListener("click", () => {
-  closePopup();
-});
+profileModalClose.addEventListener("click", closePopup);
 
-profileEditForm.addEventListener("submit", handleProfileEditModal);
+profileEditForm.addEventListener("submit", handleProfileEditSubmit);
+
+initialCards.forEach((cardData) => {
+  const cardElement = getCardElement(cardData);
+  cardList.append(cardElement);
+});
 
 // -------------------------------------------------------------------------------------
 //                                     Event Handlers
 // -------------------------------------------------------------------------------------
-function handleProfileEditModal(e) {
+function handleProfileEditSubmit(e) {
   e.preventDefault();
   profileName.textContent = profileNameInput.value;
   profileDescription.textContent = profileDescriptionInput.value;
@@ -68,4 +74,14 @@ function handleProfileEditModal(e) {
 // -------------------------------------------------------------------------------------
 function closePopup() {
   profileModal.classList.remove("modal__opened");
+}
+
+function getCardElement(cardData) {
+  const cardElement = cardTemplate.cloneNode(true);
+  const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
+  cardImage.src = cardData.link;
+  cardImage.alt = cardData.title;
+  cardTitle.textContent = cardData.title;
+  return cardElement;
 }
