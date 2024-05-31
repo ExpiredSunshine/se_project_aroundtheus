@@ -44,6 +44,7 @@ const cardModalClose = document.querySelector("#card__modal-close");
 const cardTitleInput = addCardForm.querySelector("#place-title-input");
 const cardURLInput = addCardForm.querySelector("#image-URL-input");
 const imageModal = document.querySelector("#image-modal");
+const imageModalTitle = document.querySelector(".modal__image-title");
 const imageModalClose = document.querySelector("#image__modal-close");
 const imageModalPreview = document.querySelector(".modal__image");
 const cardList = document.querySelector(".cards__list");
@@ -75,6 +76,7 @@ function getCardElement(cardData) {
   cardImage.addEventListener("click", () => {
     imageModalPreview.src = cardData.link;
     imageModalPreview.alt = cardData.name;
+    imageModalTitle.textContent = cardData.name;
     openModal(imageModal);
   });
   return cardElement;
