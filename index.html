@@ -47,7 +47,7 @@
         <p class="footer__copyright">© 2024 A.J. Croft</p>
       </footer>
     </div>
-
+    <!-- Edit Profile Modal -->
     <div class="modal" id="profile-edit-modal">
       <div class="modal__container">
         <div class="modal__close" id="profile__modal-close"></div>
@@ -59,14 +59,25 @@
             id="profile-name-input"
             placeholder="Name"
             type="text"
+            minlength="2"
+            maxlength="40"
+            required
           />
+          <span class="modal__error" id="profile-name-input-error"></span>
           <input
             class="modal__input"
             name="description"
             id="profile-description-input"
             placeholder="Description"
             type="text"
+            minlength="2"
+            maxlength="200"
+            required
           />
+          <span
+            class="modal__error"
+            id="profile-description-input-error"
+          ></span>
           <button class="modal__button" type="submit">Save</button>
         </form>
       </div>
@@ -83,6 +94,9 @@
             id="place-title-input"
             placeholder="Title"
             type="text"
+            minlength="1"
+            maxlength="30"
+            required
           />
           <input
             class="modal__input"
@@ -90,6 +104,9 @@
             id="image-URL-input"
             placeholder="Image URL"
             type="text"
+            minlength="2"
+            maxlength="40"
+            required
           />
           <button class="modal__button" type="submit">Save</button>
         </form>
@@ -116,5 +133,6 @@
     </template>
 
     <script src="./scripts/index.js" defer></script>
+    <script src="./scripts/validate.js" defer></script>
   </body>
 </html>
