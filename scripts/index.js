@@ -55,10 +55,12 @@ const cardTemplate =
 // -------------------------------------------------------------------------------------
 function closeModal(modal) {
   modal.classList.remove("modal_opened");
+  document.removeEventListener("keydown", closeModalByEscape);
 }
 
 function openModal(modal) {
   modal.classList.add("modal_opened");
+  document.addEventListener("keydown", closeModalByEscape);
 }
 
 document.querySelectorAll(".modal").forEach((modalOverlay) => {
@@ -69,13 +71,14 @@ document.querySelectorAll(".modal").forEach((modalOverlay) => {
   });
 });
 
-document.addEventListener("keydown", (event) => {
+function closeModalByEscape(event) {
   if (event.key === "Escape") {
-    document.querySelectorAll(".modal.modal_opened").forEach((modalOverlay) => {
-      closeModal(modalOverlay);
-    });
+    const openedModal = document.querySelector(".modal_opened");
+    if (openedModal) {
+      closeModal(openedModal);
+    }
   }
-});
+}
 
 function renderCard(cardData, cardList) {
   const cardElement = getCardElement(cardData);
@@ -125,6 +128,7 @@ function handleProfileEditSubmit(e) {
   e.preventDefault();
   profileName.textContent = profileNameInput.value;
   profileDescription.textContent = profileDescriptionInput.value;
+  profileEditForm.reset();
   closeModal(profileModal);
 }
 
@@ -133,6 +137,7 @@ function handleAddCardFormSubmit(e) {
   const name = cardTitleInput.value;
   const link = cardURLInput.value;
   renderCard({ name, link }, cardList);
+  addCardForm.reset();
   closeModal(addCardModal);
 }
 // -------------------------------------------------------------------------------------
