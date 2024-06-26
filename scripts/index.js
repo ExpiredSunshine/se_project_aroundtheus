@@ -61,6 +61,22 @@ function openModal(modal) {
   modal.classList.add("modal_opened");
 }
 
+document.querySelectorAll(".modal").forEach((modalOverlay) => {
+  modalOverlay.addEventListener("click", (event) => {
+    if (event.target === modalOverlay) {
+      closeModal(modalOverlay);
+    }
+  });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    document.querySelectorAll(".modal.modal_opened").forEach((modalOverlay) => {
+      closeModal(modalOverlay);
+    });
+  }
+});
+
 function renderCard(cardData, cardList) {
   const cardElement = getCardElement(cardData);
   cardList.prepend(cardElement);
@@ -99,6 +115,12 @@ initialCards.forEach((cardData) => renderCard(cardData, cardList));
 // -------------------------------------------------------------------------------------
 //                                     Event Handlers
 // -------------------------------------------------------------------------------------
+function handleOverlayClick(event) {
+  if (event.target.classList.contains(".modal")) {
+    closeModal(event.target);
+  }
+}
+
 function handleProfileEditSubmit(e) {
   e.preventDefault();
   profileName.textContent = profileNameInput.value;
