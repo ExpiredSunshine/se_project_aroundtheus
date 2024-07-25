@@ -85,6 +85,7 @@ function closeModalByEscape(event) {
 }
 
 const validationSettings = {
+  formSelector: ".form-selector",
   inputSelector: ".modal__input",
   submitButtonSelector: ".modal__button",
   inactiveButtonClass: "modal__button_disabled",
@@ -92,14 +93,21 @@ const validationSettings = {
   errorClass: "modal__error_visible",
 };
 
-const profileFormValidator = new FormValidator(
-  validationSettings,
-  profileEditForm
-);
-const addCardFormValidator = new FormValidator(validationSettings, addCardForm);
+const formValidators = {};
 
-profileFormValidator.enableValidation();
-addCardFormValidator.enableValidation();
+const enableValidation = (validationSettings) => {
+  const formList = Array.from(
+    document.querySelectorAll(validationSettings.formSelector)
+  );
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(validationSettings, formElement);
+    const formName = formElement.getAttribute("name");
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(validationSettings);
 
 const handleImageClick = (cardData) => {
   imageModalPreview.src = cardData.link;
@@ -137,7 +145,7 @@ function handleAddCardFormSubmit(e) {
   const card = createCard(cardData);
   cardList.prepend(card);
   addCardForm.reset();
-  addCardFormValidator._toggleButtonState();
+  formValidators[addCardForm.getAttribute("name")].resetValidation();
   closeModal(addCardModal);
 }
 // -------------------------------------------------------------------------------------
