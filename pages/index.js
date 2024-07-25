@@ -108,35 +108,36 @@ const handleImageClick = (cardData) => {
   openModal(imageModal);
 };
 
+function createCard(item) {
+  const card = new Card(item, "#card-template", handleImageClick);
+  return card.getView();
+}
 initialCards.forEach((cardData) => {
-  const card = new Card(cardData, "#card-template", handleImageClick);
-  cardList.prepend(card.getView());
+  const card = createCard(cardData);
+  cardList.prepend(card);
 });
 
 // -------------------------------------------------------------------------------------
 //                                     Event Handlers
 // -------------------------------------------------------------------------------------
-function handleOverlayClick(event) {
-  if (event.target.classList.contains(".modal")) {
-    closeModal(event.target);
-  }
-}
 
 function handleProfileEditSubmit(e) {
   e.preventDefault();
   profileName.textContent = profileNameInput.value;
   profileDescription.textContent = profileDescriptionInput.value;
-  profileEditForm.reset();
   closeModal(profileModal);
 }
 
 function handleAddCardFormSubmit(e) {
   e.preventDefault();
-  const name = cardTitleInput.value;
-  const link = cardURLInput.value;
-  const card = new Card({ name, link }, "#card-template", handleImageClick);
-  cardList.prepend(card.getView());
+  const cardData = {
+    name: cardTitleInput.value,
+    link: cardURLInput.value,
+  };
+  const card = createCard(cardData);
+  cardList.prepend(card);
   addCardForm.reset();
+  addCardFormValidator._toggleButtonState();
   closeModal(addCardModal);
 }
 // -------------------------------------------------------------------------------------
