@@ -68,7 +68,7 @@ function openModal(modal) {
 }
 
 document.querySelectorAll(".modal").forEach((modalOverlay) => {
-  modalOverlay.addEventListener("click", (event) => {
+  modalOverlay.addEventListener("mousedown", (event) => {
     if (event.target === modalOverlay) {
       closeModal(modalOverlay);
     }
