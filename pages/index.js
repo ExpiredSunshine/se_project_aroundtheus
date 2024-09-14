@@ -1,5 +1,6 @@
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
+import Section from "../components/Section.js";
 
 const initialCards = [
   {
@@ -120,10 +121,23 @@ function createCard(item) {
   const card = new Card(item, "#card-template", handleImageClick);
   return card.getView();
 }
-initialCards.forEach((cardData) => {
-  const card = createCard(cardData);
-  cardList.prepend(card);
-});
+// initialCards.forEach((cardData) => {
+//   const card = createCard(cardData);
+//   cardList.prepend(card);
+// });
+
+const cardSection = new Section(
+  {
+    items: initialCards,
+    renderer: (cardData) => {
+      const card = createCard(cardData);
+      cardList.prepend(card);
+    },
+  },
+  ".cards__list"
+);
+
+cardSection.renderItems();
 
 // -------------------------------------------------------------------------------------
 //                                     Event Handlers
@@ -143,7 +157,7 @@ function handleAddCardFormSubmit(e) {
     link: cardURLInput.value,
   };
   const card = createCard(cardData);
-  cardList.prepend(card);
+  cardSection.addItem(card);
   addCardForm.reset();
   formValidators[addCardForm.getAttribute("name")].resetValidation();
   closeModal(addCardModal);
