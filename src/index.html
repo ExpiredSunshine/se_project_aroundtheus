@@ -10,13 +10,12 @@
     <meta name="author" content="A.J. Croft" />
     <meta name="keywords" content="blog, images, posting..." />
     <title>Around The U.S.</title>
-    <link rel="stylesheet" href="./pages/index.css" />
   </head>
   <body class="page">
     <div>
       <header class="header">
         <img
-          src="./images/logo.svg"
+          src="<%=require('./images/logo.svg')%>"
           alt="Around The U.S. logo"
           class="header__logo"
         />
@@ -24,7 +23,7 @@
       <main class="page__content">
         <section class="profile page__section">
           <img
-            src="./images/jacques-cousteau.jpg"
+            src="<%=require('./images/jacques-cousteau.jpg')%>"
             alt="Profile image of Jacques Cousteau"
             class="profile__image"
           />
@@ -152,6 +151,6 @@
       </li>
     </template>
 
-    <script src="./pages/index.js" defer type="module"></script>
+    <!-- <script src="./pages/index.js" defer type="module"></script> -->
   </body>
 </html>

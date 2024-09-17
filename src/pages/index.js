@@ -1,6 +1,9 @@
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
+import Popup from "../components/Popup.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+import "../pages/index.css";
 
 const initialCards = [
   {
@@ -58,32 +61,40 @@ const cardTemplate =
 // -------------------------------------------------------------------------------------
 //                                     Functions
 // -------------------------------------------------------------------------------------
-function closeModal(modal) {
-  modal.classList.remove("modal_opened");
-  document.removeEventListener("keydown", closeModalByEscape);
-}
+// function closeModal(modal) {
+//   modal.classList.remove("modal_opened");
+//   document.removeEventListener("keydown", closeModalByEscape);
+// }
 
-function openModal(modal) {
-  modal.classList.add("modal_opened");
-  document.addEventListener("keydown", closeModalByEscape);
-}
+// function openModal(modal) {
+//   modal.classList.add("modal_opened");
+//   document.addEventListener("keydown", closeModalByEscape);
+// }
 
-document.querySelectorAll(".modal").forEach((modalOverlay) => {
-  modalOverlay.addEventListener("mousedown", (event) => {
-    if (event.target === modalOverlay) {
-      closeModal(modalOverlay);
-    }
-  });
-});
+// document.querySelectorAll(".modal").forEach((modalOverlay) => {
+//   modalOverlay.addEventListener("mousedown", (event) => {
+//     if (event.target === modalOverlay) {
+//       closeModal(modalOverlay);
+//     }
+//   });
+// });
 
-function closeModalByEscape(event) {
-  if (event.key === "Escape") {
-    const openedModal = document.querySelector(".modal_opened");
-    if (openedModal) {
-      closeModal(openedModal);
-    }
-  }
-}
+// function closeModalByEscape(event) {
+//   if (event.key === "Escape") {
+//     const openedModal = document.querySelector(".modal_opened");
+//     if (openedModal) {
+//       closeModal(openedModal);
+//     }
+//   }
+// }
+
+const profileModalPopup = new Popup("#profile-edit-modal");
+const addCardModalPopup = new Popup("#add-card-modal");
+const imageModalPopup = new Popup("#image-modal");
+
+profileModalPopup.setEventListeners();
+addCardModalPopup.setEventListeners();
+imageModalPopup.setEventListeners();
 
 const validationSettings = {
   formSelector: ".form-selector",
@@ -110,12 +121,19 @@ const enableValidation = (validationSettings) => {
 
 enableValidation(validationSettings);
 
+// const handleImageClick = (cardData) => {
+//   imageModalPreview.src = cardData.link;
+//   imageModalPreview.alt = cardData.name;
+//   imageModalTitle.textContent = cardData.name;
+//   openModal(imageModal);
+// };
+
 const handleImageClick = (cardData) => {
-  imageModalPreview.src = cardData.link;
-  imageModalPreview.alt = cardData.name;
-  imageModalTitle.textContent = cardData.name;
-  openModal(imageModal);
+  imagePopup.open(cardData);
 };
+
+const imagePopup = new PopupWithImage("#image-modal");
+imagePopup.setEventListeners();
 
 function createCard(item) {
   const card = new Card(item, "#card-template", handleImageClick);
@@ -169,14 +187,24 @@ function handleAddCardFormSubmit(e) {
 profileEditButton.addEventListener("click", () => {
   profileNameInput.value = profileName.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
-  openModal(profileModal);
+  profileModalPopup.open();
 });
 
-cardAddButton.addEventListener("click", () => openModal(addCardModal));
+cardAddButton.addEventListener("click", () => addCardModalPopup.open());
 
-profileModalClose.addEventListener("click", () => closeModal(profileModal));
-cardModalClose.addEventListener("click", () => closeModal(addCardModal));
-imageModalClose.addEventListener("click", () => closeModal(imageModal));
+// profileModalClose.addEventListener("click", () => closeModal(profileModal));
+// cardModalClose.addEventListener("click", () => closeModal(addCardModal));
+// imageModalClose.addEventListener("click", () => closeModal(imageModal));
+
+profileModalClose.addEventListener("click", () => {
+  profileModalPopup.close();
+});
+cardModalClose.addEventListener("click", () => {
+  addCardModalPopup.close();
+});
+imageModalClose.addEventListener("click", () => {
+  imagePopup.close();
+});
 
 profileEditForm.addEventListener("submit", handleProfileEditSubmit);
 addCardForm.addEventListener("submit", handleAddCardFormSubmit);
