@@ -6,7 +6,7 @@ export default class FormValidator {
       this._formElement.querySelectorAll(this._settings.inputSelector)
     );
     this._buttonElement = this._formElement.querySelector(
-      this._settings.submitButtonSelector
+      this._settings.submitButton
     );
   }
 
