@@ -34,9 +34,7 @@ export default class PopupWithForm extends Popup {
     });
   }
 
-  open(shouldReset = true) {
-    if (shouldReset) {
-    }
+  open() {
     super.open();
   }
 }

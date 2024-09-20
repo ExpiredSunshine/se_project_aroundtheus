@@ -4,7 +4,6 @@
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
-import Popup from "../components/Popup.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
@@ -39,29 +38,16 @@ const initialCards = [
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
   },
 ];
-
 // -------------------------------------------------------------------------------------
 //                               Selectors
 // -------------------------------------------------------------------------------------
-// const profileName = document.querySelector(".profile__name");
-// const profileDescription = document.querySelector(".profile__description");
 const profileEditButton = document.querySelector("#profile__edit-button");
-const profileModalClose = document.querySelector("#profile__modal-close");
 const profileNameInput = document.querySelector("#profile-name-input");
 const profileDescriptionInput = document.querySelector(
   "#profile-description-input"
 );
-
-const addCardForm = document.querySelector("#add-card-form");
+const addCardForm = document.forms["add-card-form"];
 const cardAddButton = document.querySelector(".profile__add-button");
-const cardModalClose = document.querySelector("#card__modal-close");
-// const cardTitleInput = document.querySelector("#place-title-input");
-// const cardURLInput = document.querySelector("#image-URL-input");
-
-const imageModalClose = document.querySelector("#image__modal-close");
-
-const cardList = document.querySelector(".cards__list");
-
 // -------------------------------------------------------------------------------------
 //                              UserInfo Instance
 // -------------------------------------------------------------------------------------
@@ -69,7 +55,6 @@ const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   descriptionSelector: ".profile__description",
 });
-
 // -------------------------------------------------------------------------------------
 //                                 Popup Instances
 // -------------------------------------------------------------------------------------
@@ -101,11 +86,9 @@ addCardPopup.setEventListeners();
 
 const imagePopup = new PopupWithImage("#image-modal");
 imagePopup.setEventListeners();
-
 // -------------------------------------------------------------------------------------
 //                               Validation
 // -------------------------------------------------------------------------------------
-
 const validationSettings = {
   formSelector: ".form-selector",
   inputSelector: ".modal__input",
@@ -130,7 +113,6 @@ const enableValidation = (validationSettings) => {
 };
 
 enableValidation(validationSettings);
-
 // -------------------------------------------------------------------------------------
 //                            Handle Image Click
 // -------------------------------------------------------------------------------------
@@ -160,7 +142,6 @@ cardSection.renderItems();
 // -------------------------------------------------------------------------------------
 //                             Event Listeners
 // -------------------------------------------------------------------------------------
-
 profileEditButton.addEventListener("click", () => {
   const { name, description } = userInfo.getUserInfo();
   profileNameInput.value = name;
