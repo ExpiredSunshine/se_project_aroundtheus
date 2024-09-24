@@ -1,6 +1,7 @@
 // -------------------------------------------------------------------------------------
 //                                     Imports
 // -------------------------------------------------------------------------------------
+import { initialCards, validationSettings } from "../utils/constants.js";
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
@@ -9,35 +10,6 @@ import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
 import "../pages/index.css";
 
-// -------------------------------------------------------------------------------------
-//                                  Card Array
-// -------------------------------------------------------------------------------------
-const initialCards = [
-  {
-    name: "Yosemite Valley",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
-  },
-  {
-    name: "Lake Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lake-louise.jpg",
-  },
-  {
-    name: "Bald Mountains",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/bald-mountains.jpg",
-  },
-  {
-    name: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/latemar.jpg",
-  },
-  {
-    name: "Vanoise National Park",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/vanoise.jpg",
-  },
-  {
-    name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
-  },
-];
 // -------------------------------------------------------------------------------------
 //                               Selectors
 // -------------------------------------------------------------------------------------
@@ -76,9 +48,11 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
       link: formData["Image URL"],
     };
     const card = createCard(cardData);
-    cardSection.addItem(card);
-    addCardForm.reset();
-    formValidators[addCardForm.getAttribute("name")]._toggleButtonState();
+    cardSection.prependItem(card);
+    addCardPopup.getForm().reset();
+    formValidators[
+      addCardPopup.getForm().getAttribute("name")
+    ].toggleButtonState();
     addCardPopup.close();
   },
 });
@@ -89,15 +63,6 @@ imagePopup.setEventListeners();
 // -------------------------------------------------------------------------------------
 //                               Validation
 // -------------------------------------------------------------------------------------
-const validationSettings = {
-  formSelector: ".form-selector",
-  inputSelector: ".modal__input",
-  submitButton: ".modal__button",
-  inactiveButtonClass: "modal__button_disabled",
-  inputErrorClass: "modal__input_type_error",
-  errorClass: "modal__error_visible",
-};
-
 const formValidators = {};
 
 const enableValidation = (validationSettings) => {
@@ -127,12 +92,16 @@ function createCard(item) {
   return card.getView();
 }
 
+function renderCard(item, method = "prependItem") {
+  const cardElement = createCard(item);
+  cardSection[method](cardElement);
+}
+
 const cardSection = new Section(
   {
     items: initialCards,
     renderer: (cardData) => {
-      const card = createCard(cardData);
-      cardSection.addItem(card);
+      renderCard(cardData);
     },
   },
   ".cards__list"
