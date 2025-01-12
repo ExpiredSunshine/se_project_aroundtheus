@@ -1,13 +1,14 @@
 // -------------------------------------------------------------------------------------
 //                                     Imports
 // -------------------------------------------------------------------------------------
-import { initialCards, validationSettings } from "../utils/constants.js";
+import { validationSettings } from "../utils/constants.js";
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
+import Api from "../components/api.js";
 import "../pages/index.css";
 
 // -------------------------------------------------------------------------------------
@@ -20,6 +21,14 @@ const profileDescriptionInput = document.querySelector(
 );
 const addCardForm = document.forms["add-card-form"];
 const cardAddButton = document.querySelector(".profile__add-button");
+// -------------------------------------------------------------------------------------
+//                                  Api
+// -------------------------------------------------------------------------------------
+const api = new Api({
+  baseUrl: "https://around-api.en.tripleten-services.com/v1",
+  authToken: "b656ee04-ff76-4b23-b20a-1e4991fc7f99",
+});
+
 // -------------------------------------------------------------------------------------
 //                              UserInfo Instance
 // -------------------------------------------------------------------------------------
@@ -99,7 +108,6 @@ function renderCard(item, method = "prependItem") {
 
 const cardSection = new Section(
   {
-    items: initialCards,
     renderer: (cardData) => {
       renderCard(cardData);
     },
@@ -107,7 +115,9 @@ const cardSection = new Section(
   ".cards__list"
 );
 
-cardSection.renderItems();
+api.getCardList().then((cards) => {
+  cardSection.renderItems(cards);
+});
 // -------------------------------------------------------------------------------------
 //                             Event Listeners
 // -------------------------------------------------------------------------------------
