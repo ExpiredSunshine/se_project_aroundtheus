@@ -18,12 +18,25 @@ export default class Api {
         console.log(err);
       });
   }
+  // POST https://around-api.en.tripleten-services.com/v1/cards
+  addCard({ name, link }) {
+    return fetch(`${this._baseUrl}/cards`, {
+      method: "POST",
+      headers: {
+        authorization: this._authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        link,
+      }),
+    });
+  }
 }
 
 // GET https://around-api.en.tripleten-services.com/v1/users/me
 // PATCH https://around-api.en.tripleten-services.com/v1/users/me
 // PATCH https://around-api.en.tripleten-services.com/v1/users/me/avatar
-// POST https://around-api.en.tripleten-services.com/v1/cards
 // DELETE https://around-api.en.tripleten-services.com/v1/cards/:cardId
 // PUT https://around-api.en.tripleten-services.com/v1/cards/:cardId/likes
 // DELETE https://around-api.en.tripleten-services.com/v1/cards/:cardId/likes

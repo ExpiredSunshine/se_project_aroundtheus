@@ -21,6 +21,7 @@ const profileDescriptionInput = document.querySelector(
 );
 const addCardForm = document.forms["add-card-form"];
 const cardAddButton = document.querySelector(".profile__add-button");
+const cardTemplate = document.querySelector("#card-template");
 // -------------------------------------------------------------------------------------
 //                                  Api
 // -------------------------------------------------------------------------------------
@@ -96,28 +97,28 @@ const handleImageClick = (cardData) => {
 // -------------------------------------------------------------------------------------
 //                          Card Creation & Rendering
 // -------------------------------------------------------------------------------------
-function createCard(item) {
-  const card = new Card(item, "#card-template", handleImageClick);
-  return card.getView();
-}
-
-function renderCard(item, method = "prependItem") {
-  const cardElement = createCard(item);
-  cardSection[method](cardElement);
-}
-
-const cardSection = new Section(
-  {
-    renderer: (cardData) => {
-      renderCard(cardData);
-    },
-  },
-  ".cards__list"
-);
-
-api.getCardList().then((cards) => {
-  cardSection.renderItems(cards);
-});
+api
+  .getCardList()
+  .then((cardList) => {
+    const cards = cardList.map((cardData) => {
+      const card = new Card(cardData, cardTemplate);
+      return card.getView();
+    });
+    // console.log("Array of cards", cards);
+    const cardSection = new Section(
+      {
+        items: cards,
+        renderer: (cardElement) => {
+          cardSection.appendItem(cardElement);
+        },
+      },
+      ".cards__list"
+    );
+    cardSection.renderItems();
+  })
+  .catch((error) => {
+    console.error("Failed to fetch or render cards:", error);
+  });
 // -------------------------------------------------------------------------------------
 //                             Event Listeners
 // -------------------------------------------------------------------------------------
