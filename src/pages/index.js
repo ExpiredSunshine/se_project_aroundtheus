@@ -97,25 +97,37 @@ const handleImageClick = (cardData) => {
 // -------------------------------------------------------------------------------------
 //                          Card Creation & Rendering
 // -------------------------------------------------------------------------------------
-api
-  .getCardList()
-  .then((cardList) => {
-    const cards = cardList.map((cardData) => {
-      const card = new Card(cardData, cardTemplate);
-      return card.getView();
-    });
-    // console.log("Array of cards", cards);
-    const cardSection = new Section(
-      {
-        items: cards,
-        renderer: (cardElement) => {
-          cardSection.appendItem(cardElement);
-        },
+function fetchCardList() {
+  console.log("Fetching card list...");
+  return api.getCardList();
+}
+
+function createCards(cardList, cardTemplate) {
+  console.log("Creating card elements...");
+  return cardList.map((cardData) => {
+    const card = new Card(cardData, cardTemplate);
+    return card.getView();
+  });
+}
+
+function initializeCardSection(cards) {
+  console.log("Initializing card section...");
+  const cardSection = new Section(
+    {
+      items: cards,
+      renderer: (cardElement) => {
+        cardSection.appendItem(cardElement);
       },
-      ".cards__list"
-    );
-    cardSection.renderItems();
-  })
+    },
+    ".cards__list"
+  );
+
+  cardSection.renderItems();
+}
+
+fetchCardList()
+  .then((cardList) => createCards(cardList, cardTemplate))
+  .then((cards) => initializeCardSection(cards))
   .catch((error) => {
     console.error("Failed to fetch or render cards:", error);
   });
