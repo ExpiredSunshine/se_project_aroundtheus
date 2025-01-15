@@ -23,7 +23,7 @@ const addCardForm = document.forms["add-card-form"];
 const cardAddButton = document.querySelector(".profile__add-button");
 const cardTemplate = document.querySelector("#card-template");
 // -------------------------------------------------------------------------------------
-//                                  Api
+//                                 Api Instance
 // -------------------------------------------------------------------------------------
 const api = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
@@ -38,7 +38,7 @@ const userInfo = new UserInfo({
   descriptionSelector: ".profile__description",
 });
 // -------------------------------------------------------------------------------------
-//                                 Popup Instances
+//                              Popup Instances
 // -------------------------------------------------------------------------------------
 const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
   handleFormSubmit: (formData) => {
@@ -51,51 +51,59 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
 });
 profileEditPopup.setEventListeners();
 
+// -------------------------------------------------------------------------------------
+//                       Adding a new Card to DOM and API
+// -------------------------------------------------------------------------------------
+
+function createCard(cardData) {
+  const card = new Card(cardData, cardTemplate);
+  return card.getView();
+}
+
+function postCardToApi(cardData) {
+  return api.addCard(cardData).catch((error) => {
+    console.log("Failed to add card to the API:", error);
+    throw error;
+  });
+}
+
+function addCardToSection(card) {
+  const cardSection = new Section({}, ".cards__list");
+  cardSection.prependItem(card);
+}
+
+function resetAndClosePopup(popupInstance) {
+  const form = popupInstance.getForm();
+  form.reset();
+  formValidators[form.getAttribute("name")].toggleButtonState();
+  popupInstance.close();
+}
+
 const addCardPopup = new PopupWithForm("#add-card-modal", {
   handleFormSubmit: (formData) => {
     const cardData = {
       name: formData["title"],
       link: formData["Image URL"],
     };
-    const card = createCard(cardData);
-    cardSection.prependItem(card);
-    addCardPopup.getForm().reset();
-    formValidators[
-      addCardPopup.getForm().getAttribute("name")
-    ].toggleButtonState();
-    addCardPopup.close();
+
+    postCardToApi(cardData)
+      .then((apiCardData) => {
+        const card = createCard(apiCardData);
+        addCardToSection(card);
+        resetAndClosePopup(addCardPopup);
+      })
+      .catch((error) => {
+        console.log("Error adding card:", error);
+      });
   },
 });
+
 addCardPopup.setEventListeners();
 
 const imagePopup = new PopupWithImage("#image-modal");
 imagePopup.setEventListeners();
 // -------------------------------------------------------------------------------------
-//                               Validation
-// -------------------------------------------------------------------------------------
-const formValidators = {};
-
-const enableValidation = (validationSettings) => {
-  const formList = Array.from(
-    document.querySelectorAll(validationSettings.formSelector)
-  );
-  formList.forEach((formElement) => {
-    const validator = new FormValidator(validationSettings, formElement);
-    const formName = formElement.getAttribute("name");
-    formValidators[formName] = validator;
-    validator.enableValidation();
-  });
-};
-
-enableValidation(validationSettings);
-// -------------------------------------------------------------------------------------
-//                            Handle Image Click
-// -------------------------------------------------------------------------------------
-const handleImageClick = (cardData) => {
-  imagePopup.open(cardData);
-};
-// -------------------------------------------------------------------------------------
-//                          Card Creation & Rendering
+//                      Card Creation & Rendering from API
 // -------------------------------------------------------------------------------------
 function fetchCardList() {
   console.log("Fetching card list...");
@@ -131,6 +139,30 @@ fetchCardList()
   .catch((error) => {
     console.error("Failed to fetch or render cards:", error);
   });
+// -------------------------------------------------------------------------------------
+//                              Handle Image Click
+// -------------------------------------------------------------------------------------
+const handleImageClick = (cardData) => {
+  imagePopup.open(cardData);
+};
+// -------------------------------------------------------------------------------------
+//                                 Validation
+// -------------------------------------------------------------------------------------
+const formValidators = {};
+
+const enableValidation = (validationSettings) => {
+  const formList = Array.from(
+    document.querySelectorAll(validationSettings.formSelector)
+  );
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(validationSettings, formElement);
+    const formName = formElement.getAttribute("name");
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(validationSettings);
 // -------------------------------------------------------------------------------------
 //                             Event Listeners
 // -------------------------------------------------------------------------------------

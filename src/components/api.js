@@ -30,6 +30,11 @@ export default class Api {
         name,
         link,
       }),
+    }).then((res) => {
+      if (!res.ok) {
+        return Promise.reject(`Error: ${res.status}`);
+      }
+      return res.json();
     });
   }
 }
