@@ -36,6 +36,19 @@ export default class Api {
       return res.json();
     });
   }
+  getProfileData() {
+    return fetch(`${this._baseUrl}/users/me`, {
+      headers: {
+        authorization: this._authToken,
+      },
+    })
+      .then((res) =>
+        res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
 
 // GET https://around-api.en.tripleten-services.com/v1/users/me

@@ -19,7 +19,6 @@ const profileNameInput = document.querySelector("#profile-name-input");
 const profileDescriptionInput = document.querySelector(
   "#profile-description-input"
 );
-const addCardForm = document.forms["add-card-form"];
 const cardAddButton = document.querySelector(".profile__add-button");
 const cardTemplate = document.querySelector("#card-template");
 // -------------------------------------------------------------------------------------
@@ -33,23 +32,64 @@ const api = new Api({
 // -------------------------------------------------------------------------------------
 //                              UserInfo Instance
 // -------------------------------------------------------------------------------------
+// populating modal with current written content in profile
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   descriptionSelector: ".profile__description",
 });
+
 // -------------------------------------------------------------------------------------
 //                              Popup Instances
 // -------------------------------------------------------------------------------------
+
+// ON EDIT PROFILE CLICK = populate from with current user info
+// THEN = open profile edit modal
+// ON EDITING FORM = run validation
+// ON SUBMISSION = toggle save load state to SAVING...
+// THEN = PATCH new user info to API
+// THEN = Update profile on DOM
+// THEN = close modal
+// THEN = toggle save load state to Save
+
+// ON LOAD = GET user info from API
+function fetchProfileData() {
+  console.log("Fetching Profile Data...");
+  return api.getProfileData();
+}
+// THEN = populate profile with collected user info
+function populateProfile(data) {
+  userInfo.setUserInfo({
+    name: data.name,
+    description: data.about,
+  });
+}
+fetchProfileData()
+  .then((data) => {
+    populateProfile(data);
+    console.log("Profile Data:", data);
+  })
+  .catch((error) => {
+    console.error("Failed to fetch profile data:", error);
+  });
+
+// whats in form and sets on profile in DOM
 const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
   handleFormSubmit: (formData) => {
     userInfo.setUserInfo({
       name: formData["name"],
-      description: formData["description"],
+      description: formData["about"],
     });
     profileEditPopup.close();
   },
 });
 profileEditPopup.setEventListeners();
+
+// -------------------------------------------------------------------------------------
+//                              Image Popup (NOT WORKING)
+// -------------------------------------------------------------------------------------
+
+const imagePopup = new PopupWithImage("#image-modal");
+imagePopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
 //                       Add new Card to DOM and API
@@ -105,8 +145,6 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
 
 addCardPopup.setEventListeners();
 
-const imagePopup = new PopupWithImage("#image-modal");
-imagePopup.setEventListeners();
 // -------------------------------------------------------------------------------------
 //                      Card Creation & Rendering from API
 // -------------------------------------------------------------------------------------
@@ -176,7 +214,7 @@ profileEditButton.addEventListener("click", () => {
   profileNameInput.value = name;
   profileDescriptionInput.value = description;
   formValidators["profile-form"].resetValidation();
-  profileEditPopup.open(false);
+  profileEditPopup.open();
 });
 
 cardAddButton.addEventListener("click", () => {
