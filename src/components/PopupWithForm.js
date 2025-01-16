@@ -1,3 +1,4 @@
+import Api from "./api.js";
 import Popup from "./Popup.js";
 
 export default class PopupWithForm extends Popup {
@@ -25,6 +26,16 @@ export default class PopupWithForm extends Popup {
 
   getForm() {
     return this._form;
+  }
+
+  toggleUploadIndicator(isUploading) {
+    if (isUploading) {
+      this._submitButton.textContent = "Saving...";
+      this._submitButton.disabled = true;
+    } else {
+      this._submitButton.textContent = "Save";
+      this._submitButton.disabled = false;
+    }
   }
 
   setEventListeners() {

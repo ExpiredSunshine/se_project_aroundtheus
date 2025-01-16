@@ -4,7 +4,6 @@ export default class Api {
     this._authToken = authToken;
   }
 
-  // GET https://around-api.en.tripleten-services.com/v1/cards
   getCardList() {
     return fetch(`${this._baseUrl}/cards`, {
       headers: {
@@ -18,7 +17,7 @@ export default class Api {
         console.log(err);
       });
   }
-  // POST https://around-api.en.tripleten-services.com/v1/cards
+
   addCard({ name, link }) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",

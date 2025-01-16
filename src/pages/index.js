@@ -23,7 +23,7 @@ const addCardForm = document.forms["add-card-form"];
 const cardAddButton = document.querySelector(".profile__add-button");
 const cardTemplate = document.querySelector("#card-template");
 // -------------------------------------------------------------------------------------
-//                                 Api Instance
+//                                 API Instance
 // -------------------------------------------------------------------------------------
 const api = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
@@ -52,19 +52,18 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
 profileEditPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
-//                       Adding a new Card to DOM and API
+//                       Add new Card to DOM and API
 // -------------------------------------------------------------------------------------
-
-function createCard(cardData) {
-  const card = new Card(cardData, cardTemplate);
-  return card.getView();
-}
-
 function postCardToApi(cardData) {
   return api.addCard(cardData).catch((error) => {
     console.log("Failed to add card to the API:", error);
     throw error;
   });
+}
+
+function createCard(cardData) {
+  const card = new Card(cardData, cardTemplate);
+  return card.getView();
 }
 
 function addCardToSection(card) {
@@ -86,6 +85,9 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
       link: formData["Image URL"],
     };
 
+    const isUploading = true;
+    addCardPopup.toggleUploadIndicator(isUploading);
+
     postCardToApi(cardData)
       .then((apiCardData) => {
         const card = createCard(apiCardData);
@@ -94,6 +96,9 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
       })
       .catch((error) => {
         console.log("Error adding card:", error);
+      })
+      .finally(() => {
+        addCardPopup.toggleUploadIndicator(false);
       });
   },
 });
