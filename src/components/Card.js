@@ -25,6 +25,8 @@ export default class Card {
     });
 
     this._deleteButton.addEventListener("click", () => {
+      console.log("Open Delete modal");
+
       this._handleCardDelete();
     });
 
@@ -38,6 +40,7 @@ export default class Card {
   }
 
   _handleCardDelete() {
+    console.log("Card Deleted");
     this._element.remove();
     this._element = null;
   }

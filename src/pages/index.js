@@ -49,11 +49,9 @@ function resetAndClosePopup(popupInstance) {
 //                         Inital UserInfo Population
 // -------------------------------------------------------------------------------------
 function fetchProfileData() {
-  console.log("Fetching Profile Data...");
   return api.getProfileData();
 }
 function populateProfile(data) {
-  console.log("Populating Profile...");
   userInfo.setUserInfo({
     name: data.name,
     about: data.about,
@@ -63,7 +61,6 @@ fetchProfileData()
   .then((data) => {
     populateProfile(data);
   })
-  .then(() => console.log("Profile Populated"))
   .catch((error) => {
     console.error("Failed to fetch profile data:", error);
   });
@@ -79,12 +76,10 @@ function patchProfileDataToApi(userInfo) {
 }
 
 function updateUserProfile(data) {
-  console.log("Populating Profile...");
   userInfo.setUserInfo({
     name: data.name,
     about: data.about,
   });
-  console.log("Profile Updated");
 }
 
 const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
@@ -107,7 +102,7 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
 profileEditPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
-//                              Image Popup (NOT WORKING)
+//                              Image Popup
 // -------------------------------------------------------------------------------------
 
 const imagePopup = new PopupWithImage("#image-modal");
@@ -164,20 +159,19 @@ addCardPopup.setEventListeners();
 //                      Card Creation & Rendering from API
 // -------------------------------------------------------------------------------------
 function fetchCardList() {
-  console.log("Fetching card list...");
   return api.getCardList();
 }
 
 function createCards(cardList, cardTemplate) {
-  console.log("Creating card elements...");
   return cardList.map((cardData) => {
-    const card = new Card(cardData, cardTemplate);
+    const card = new Card(cardData, cardTemplate, (cardData) => {
+      imagePopup.open(cardData);
+    });
     return card.getView();
   });
 }
 
 function initializeCardSection(cards) {
-  console.log("Initializing card section...");
   const cardSection = new Section(
     {
       items: cards,
@@ -194,16 +188,10 @@ function initializeCardSection(cards) {
 fetchCardList()
   .then((cardList) => createCards(cardList, cardTemplate))
   .then((cards) => initializeCardSection(cards))
-  .then(() => console.log("Cards Rendered"))
   .catch((error) => {
     console.error("Failed to fetch or render cards:", error);
   });
-// -------------------------------------------------------------------------------------
-//                              Handle Image Click
-// -------------------------------------------------------------------------------------
-const handleImageClick = (cardData) => {
-  imagePopup.open(cardData);
-};
+
 // -------------------------------------------------------------------------------------
 //                                 Validation
 // -------------------------------------------------------------------------------------
@@ -236,3 +224,7 @@ profileEditButton.addEventListener("click", () => {
 cardAddButton.addEventListener("click", () => {
   addCardPopup.open(true);
 });
+
+// deleteCardButton.addEventListener("click", () => {
+//   deleteCardModal.open(true);
+// });
