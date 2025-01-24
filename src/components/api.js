@@ -49,6 +49,25 @@ export default class Api {
         console.log(err);
       });
   }
+
+  editProfileData({ name, about }) {
+    return fetch(`${this._baseUrl}/users/me`, {
+      method: "PATCH",
+      headers: {
+        authorization: this._authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        about,
+      }),
+    }).then((res) => {
+      if (!res.ok) {
+        return Promise.reject(`Error: ${res.status}`);
+      }
+      return res.json();
+    });
+  }
 }
 
 // GET https://around-api.en.tripleten-services.com/v1/users/me
