@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------------------
-//                                     Imports
+// Imports
 // -------------------------------------------------------------------------------------
 import { validationSettings } from "../utils/constants.js";
 import Card from "../components/Card.js";
@@ -7,20 +7,22 @@ import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
+import PopupWithConfirm from "../components/PopupWithConfirm.js";
 import UserInfo from "../components/UserInfo.js";
 import Api from "../components/api.js";
 import "../pages/index.css";
 
 // -------------------------------------------------------------------------------------
-//                               Selectors
+// Selectors
 // -------------------------------------------------------------------------------------
 const profileEditButton = document.querySelector("#profile__edit-button");
 const profileNameInput = document.querySelector("#profile-name-input");
 const profileAboutInput = document.querySelector("#profile-description-input");
 const cardAddButton = document.querySelector(".profile__add-button");
 const cardTemplate = document.querySelector("#card-template");
+
 // -------------------------------------------------------------------------------------
-//                                 API Instance
+// API Instance
 // -------------------------------------------------------------------------------------
 const api = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
@@ -28,25 +30,15 @@ const api = new Api({
 });
 
 // -------------------------------------------------------------------------------------
-//                              UserInfo Instance
+// UserInfo Instance
 // -------------------------------------------------------------------------------------
-// populating modal with current written content in profile
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   aboutSelector: ".profile__description",
 });
-// -------------------------------------------------------------------------------------
-//                              Handle Popup Close
-// -------------------------------------------------------------------------------------
-function resetAndClosePopup(popupInstance) {
-  const form = popupInstance.getForm();
-  form.reset();
-  formValidators[form.getAttribute("name")].toggleButtonState();
-  popupInstance.close();
-}
 
 // -------------------------------------------------------------------------------------
-//                         Inital UserInfo Population
+// Inital UserInfo Population
 // -------------------------------------------------------------------------------------
 function fetchProfileData() {
   return api.getProfileData();
@@ -64,10 +56,86 @@ fetchProfileData()
   .catch((error) => {
     console.error("Failed to fetch profile data:", error);
   });
-// -------------------------------------------------------------------------------------
-//                              Editing UserInfo
-// -------------------------------------------------------------------------------------
 
+// -------------------------------------------------------------------------------------
+// Card Creation & Rendering from API
+// -------------------------------------------------------------------------------------
+function fetchCardList() {
+  return api.getCardList();
+}
+
+function createCards(cardList, cardTemplate) {
+  return cardList.map((cardData) => {
+    const card = new Card(cardData, cardTemplate, (cardData) => {
+      imagePopup.open(cardData);
+      deleteCardPopup.setEventListeners();
+      deleteCardPopup.open();
+    });
+
+    return card.getView();
+  });
+}
+
+function initializeCardSection(cards) {
+  const cardSection = new Section(
+    {
+      items: cards,
+      renderer: (cardElement) => {
+        cardSection.appendItem(cardElement);
+      },
+    },
+    ".cards__list"
+  );
+
+  cardSection.renderItems();
+}
+
+fetchCardList()
+  .then((cardList) => createCards(cardList, cardTemplate))
+  .then((cards) => initializeCardSection(cards))
+  .catch((error) => {
+    console.error("Failed to fetch or render cards:", error);
+  });
+
+// -------------------------------------------------------------------------------------
+// Validation
+// -------------------------------------------------------------------------------------
+const formValidators = {};
+
+const enableValidation = (validationSettings) => {
+  const formList = Array.from(
+    document.querySelectorAll(validationSettings.formSelector)
+  );
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(validationSettings, formElement);
+    const formName = formElement.getAttribute("name");
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+};
+enableValidation(validationSettings);
+
+// -------------------------------------------------------------------------------------
+// Image Popup
+// -------------------------------------------------------------------------------------
+const imagePopup = new PopupWithImage("#image-modal");
+imagePopup.setEventListeners();
+
+const deleteCardPopup = new PopupWithConfirm(".delete-card-modal");
+
+// -------------------------------------------------------------------------------------
+// Handle Popup Close
+// -------------------------------------------------------------------------------------
+function resetAndClosePopup(popupInstance) {
+  const form = popupInstance.getForm();
+  form.reset();
+  formValidators[form.getAttribute("name")].toggleButtonState();
+  popupInstance.close();
+}
+
+// -------------------------------------------------------------------------------------
+// Editing UserInfo Popup
+// -------------------------------------------------------------------------------------
 function patchProfileDataToApi(userInfo) {
   return api.editProfileData(userInfo).catch((error) => {
     console.log("Failed to update profile data:", error);
@@ -102,14 +170,7 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
 profileEditPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
-//                              Image Popup
-// -------------------------------------------------------------------------------------
-
-const imagePopup = new PopupWithImage("#image-modal");
-imagePopup.setEventListeners();
-
-// -------------------------------------------------------------------------------------
-//                           Add new Card to DOM and API
+// Card adding to API & DOM
 // -------------------------------------------------------------------------------------
 function postCardToApi(cardData) {
   return api.addCard(cardData).catch((error) => {
@@ -156,62 +217,19 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
 addCardPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
-//                      Card Creation & Rendering from API
+// Card deletion from API & DOM
 // -------------------------------------------------------------------------------------
-function fetchCardList() {
-  return api.getCardList();
-}
-
-function createCards(cardList, cardTemplate) {
-  return cardList.map((cardData) => {
-    const card = new Card(cardData, cardTemplate, (cardData) => {
-      imagePopup.open(cardData);
-    });
-    return card.getView();
-  });
-}
-
-function initializeCardSection(cards) {
-  const cardSection = new Section(
-    {
-      items: cards,
-      renderer: (cardElement) => {
-        cardSection.appendItem(cardElement);
-      },
-    },
-    ".cards__list"
-  );
-
-  cardSection.renderItems();
-}
-
-fetchCardList()
-  .then((cardList) => createCards(cardList, cardTemplate))
-  .then((cards) => initializeCardSection(cards))
-  .catch((error) => {
-    console.error("Failed to fetch or render cards:", error);
-  });
+//
+// on clicking the delete bin run function openDeleteModal() {instantiate new popup with form instance, calls .open on it to add the open modal class}
+// .then within this instance, make the submit button say "yes?" and ask "Are you sure?"
+// .then on clicking "yes", send delete request to the API for the triggering card
+// .then once promise is returned, make the already functioning DOM removal logic take place
+// .then close modal
+// .catch error if any
+//
 
 // -------------------------------------------------------------------------------------
-//                                 Validation
-// -------------------------------------------------------------------------------------
-const formValidators = {};
-
-const enableValidation = (validationSettings) => {
-  const formList = Array.from(
-    document.querySelectorAll(validationSettings.formSelector)
-  );
-  formList.forEach((formElement) => {
-    const validator = new FormValidator(validationSettings, formElement);
-    const formName = formElement.getAttribute("name");
-    formValidators[formName] = validator;
-    validator.enableValidation();
-  });
-};
-
-enableValidation(validationSettings);
-// -------------------------------------------------------------------------------------
-//                             Event Listeners
+// Event Listeners
 // -------------------------------------------------------------------------------------
 profileEditButton.addEventListener("click", () => {
   const { name, about } = userInfo.getUserInfo();
@@ -224,7 +242,3 @@ profileEditButton.addEventListener("click", () => {
 cardAddButton.addEventListener("click", () => {
   addCardPopup.open(true);
 });
-
-// deleteCardButton.addEventListener("click", () => {
-//   deleteCardModal.open(true);
-// });

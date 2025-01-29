@@ -27,16 +27,6 @@ export default class PopupWithForm extends Popup {
     return this._form;
   }
 
-  toggleUploadIndicator(isUploading) {
-    if (isUploading) {
-      this._submitButton.textContent = "Saving...";
-      this._submitButton.disabled = true;
-    } else {
-      this._submitButton.textContent = "Save";
-      this._submitButton.disabled = false;
-    }
-  }
-
   setEventListeners() {
     super.setEventListeners();
     this._form.addEventListener("submit", (event) => {

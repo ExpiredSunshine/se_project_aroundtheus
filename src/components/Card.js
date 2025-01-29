@@ -1,7 +1,8 @@
 export default class Card {
-  constructor({ name, link }, cardTemplate, handleImageClick) {
+  constructor({ name, link, _id }, cardTemplate, handleImageClick) {
     this._name = name;
     this._link = link;
+    this._id = _id;
     this._cardTemplate = cardTemplate;
     this._handleImageClick = handleImageClick;
     this._element = this._getTemplate();
@@ -9,6 +10,7 @@ export default class Card {
     this._deleteButton = this._element.querySelector(".card__delete-button");
     this._cardImage = this._element.querySelector(".card__image");
     this._cardTitle = this._element.querySelector(".card__title");
+    this._deleteCardModal = document.querySelector(".delete-card-modal");
     this._setEventListeners();
   }
 
@@ -25,9 +27,7 @@ export default class Card {
     });
 
     this._deleteButton.addEventListener("click", () => {
-      console.log("Open Delete modal");
-
-      this._handleCardDelete();
+      this._handleDeleteClick();
     });
 
     this._cardImage.addEventListener("click", () => {
@@ -39,10 +39,8 @@ export default class Card {
     this._likeButton.classList.toggle("card__like-button_active");
   }
 
-  _handleCardDelete() {
-    console.log("Card Deleted");
-    this._element.remove();
-    this._element = null;
+  _handleDeleteClick() {
+    this._deleteCardModal.classList.add("modal_opened");
   }
 
   getView() {
