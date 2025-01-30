@@ -58,7 +58,7 @@ fetchProfileData()
   });
 
 // -------------------------------------------------------------------------------------
-// Image Popup
+// Image Popup Instance
 // -------------------------------------------------------------------------------------
 const imagePopup = new PopupWithImage("#image-modal");
 imagePopup.setEventListeners();
@@ -74,7 +74,7 @@ const cardSection = new Section(
         cardData,
         cardTemplate,
         (cardData) => imagePopup.open(cardData),
-        handleCardDeleteButtonClick
+        handleTrashClick
       ).getView();
       cardSection.appendItem(card);
     },
@@ -117,7 +117,7 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
           apiCardData,
           cardTemplate,
           (data) => imagePopup.open(data),
-          handleCardDeleteButtonClick
+          handleTrashClick
         ).getView();
 
         cardSection.prependItem(card);
@@ -133,27 +133,21 @@ addCardPopup.setEventListeners();
 // -------------------------------------------------------------------------------------
 // Card deletion from API & DOM
 // -------------------------------------------------------------------------------------
-//
-// on clicking the delete bin run function openDeleteModal() {instantiate new popup with form instance, calls .open on it to add the open modal class}
-// .then within this instance, make the submit button say "yes?" and ask "Are you sure?"
-// .then on clicking "yes", send delete request to the API for the triggering card
-// .then once promise is returned, make the already functioning DOM removal logic take place
-// .then close modal
-// .catch error if any
-//
 const deleteCardModal = new PopupWithConfirm("#delete-card-modal", () => {});
 deleteCardModal.setEventListeners();
 
-//runs when clicking the trash button on a card
-function handleCardDeleteButtonClick(card) {
-  // open the delete card modal
+function handleTrashClick(card) {
   deleteCardModal.open();
 
   deleteCardModal.setSubmitHandler(() => {
-    // runs when submitting the delete card modal
-    api.deleteCard(card._id);
-    this._element.remove();
-    this._element = null;
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        card._element.remove();
+        card._element = null;
+        deleteCardModal.close();
+      })
+      .catch((error) => console.error("Failed to delete card:", error));
   });
 }
 

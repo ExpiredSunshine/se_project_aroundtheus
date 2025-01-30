@@ -3,14 +3,14 @@ export default class Card {
     { name, link, _id },
     cardTemplate,
     handleImageClick,
-    handleDeleteClick
+    handleTrashClick
   ) {
     this._name = name;
     this._link = link;
     this._id = _id;
     this._cardTemplate = cardTemplate;
     this._handleImageClick = handleImageClick;
-    this._handleDeleteClick = handleDeleteClick;
+    this._handleTrashClick = handleTrashClick;
     this._element = this._getTemplate();
     this._likeButton = this._element.querySelector(".card__like-button");
     this._deleteButton = this._element.querySelector(".card__delete-button");
@@ -33,7 +33,7 @@ export default class Card {
     });
 
     this._deleteButton.addEventListener("click", () => {
-      this._handleDeleteClick(this);
+      this._handleTrashClick(this);
     });
 
     this._cardImage.addEventListener("click", () => {
@@ -45,7 +45,7 @@ export default class Card {
     this._likeButton.classList.toggle("card__like-button_active");
   }
 
-  _handleDeleteClick() {
+  _handleTrashClick() {
     this._deleteCardModal.classList.add("modal_opened");
     document.addEventListener("keydown", this._handleEscClose);
   }
