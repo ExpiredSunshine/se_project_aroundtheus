@@ -37,20 +37,20 @@ export default class Api {
     });
   }
 
-  // deleteCardFromApi(cardId) {
-  //   return fetch(`${this._baseUrl}/cards/${cardId}`, {
-  //     method: "DELETE",
-  //     headers: {
-  //       authorization: this._authToken,
-  //       "Content-Type": "application/json",
-  //     },
-  //   }).then((res) => {
-  //     if (!res.ok) {
-  //       return Promise.reject(`Error: ${res.status}`);
-  //     }
-  //     return res.json();
-  //   });
-  // }
+  deleteCard(cardId) {
+    return fetch(`${this._baseUrl}/cards/${cardId}`, {
+      method: "DELETE",
+      headers: {
+        authorization: this._authToken,
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (!res.ok) {
+        return Promise.reject(`Error: ${res.status}`);
+      }
+      return res.json();
+    });
+  }
 
   getProfileData() {
     return fetch(`${this._baseUrl}/users/me`, {

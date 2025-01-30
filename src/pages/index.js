@@ -7,10 +7,10 @@ import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
-import PopupWithConfirm from "../components/PopupWithConfirm.js";
 import UserInfo from "../components/UserInfo.js";
 import Api from "../components/api.js";
 import "../pages/index.css";
+import PopupWithConfirm from "../components/PopupWithConfirm.js";
 
 // -------------------------------------------------------------------------------------
 // Selectors
@@ -58,44 +58,104 @@ fetchProfileData()
   });
 
 // -------------------------------------------------------------------------------------
+// Image Popup
+// -------------------------------------------------------------------------------------
+const imagePopup = new PopupWithImage("#image-modal");
+imagePopup.setEventListeners();
+
+// -------------------------------------------------------------------------------------
+// Card Section Instance
+// -------------------------------------------------------------------------------------
+const cardSection = new Section(
+  {
+    items: [],
+    renderer: (cardData) => {
+      const card = new Card(
+        cardData,
+        cardTemplate,
+        (cardData) => imagePopup.open(cardData),
+        handleCardDeleteButtonClick
+      ).getView();
+      cardSection.appendItem(card);
+    },
+  },
+  ".cards__list"
+);
+
+// -------------------------------------------------------------------------------------
 // Card Creation & Rendering from API
 // -------------------------------------------------------------------------------------
-function fetchCardList() {
-  return api.getCardList();
-}
-
-function createCards(cardList, cardTemplate) {
-  return cardList.map((cardData) => {
-    const card = new Card(cardData, cardTemplate, (cardData) => {
-      imagePopup.open(cardData);
-      deleteCardPopup.setEventListeners();
-      deleteCardPopup.open();
+function renderCards() {
+  return api
+    .getCardList()
+    .then((cardList) => {
+      cardSection.renderItems(cardList);
+    })
+    .catch((error) => {
+      console.error("Failed to fetch or render cards:", error);
     });
-
-    return card.getView();
-  });
 }
 
-function initializeCardSection(cards) {
-  const cardSection = new Section(
-    {
-      items: cards,
-      renderer: (cardElement) => {
-        cardSection.appendItem(cardElement);
-      },
-    },
-    ".cards__list"
-  );
+renderCards();
 
-  cardSection.renderItems();
-}
+// -------------------------------------------------------------------------------------
+// Card adding to API & DOM
+// -------------------------------------------------------------------------------------
+const addCardPopup = new PopupWithForm("#add-card-modal", {
+  handleFormSubmit: (formData) => {
+    const cardData = {
+      name: formData["title"],
+      link: formData["Image URL"],
+    };
 
-fetchCardList()
-  .then((cardList) => createCards(cardList, cardTemplate))
-  .then((cards) => initializeCardSection(cards))
-  .catch((error) => {
-    console.error("Failed to fetch or render cards:", error);
+    addCardPopup.toggleUploadIndicator(true);
+
+    api
+      .addCard(cardData)
+      .then((apiCardData) => {
+        const card = new Card(
+          apiCardData,
+          cardTemplate,
+          (data) => imagePopup.open(data),
+          handleCardDeleteButtonClick
+        ).getView();
+
+        cardSection.prependItem(card);
+        resetAndClosePopup(addCardPopup);
+      })
+      .catch((error) => console.error("Error adding card:", error))
+      .finally(() => addCardPopup.toggleUploadIndicator(false));
+  },
+});
+
+addCardPopup.setEventListeners();
+
+// -------------------------------------------------------------------------------------
+// Card deletion from API & DOM
+// -------------------------------------------------------------------------------------
+//
+// on clicking the delete bin run function openDeleteModal() {instantiate new popup with form instance, calls .open on it to add the open modal class}
+// .then within this instance, make the submit button say "yes?" and ask "Are you sure?"
+// .then on clicking "yes", send delete request to the API for the triggering card
+// .then once promise is returned, make the already functioning DOM removal logic take place
+// .then close modal
+// .catch error if any
+//
+const deleteCardModal = new PopupWithConfirm("#delete-card-modal", () => {});
+deleteCardModal.setEventListeners();
+
+//runs when clicking the trash button on a card
+function handleCardDeleteButtonClick(card) {
+  // open the delete card modal
+  deleteCardModal.open();
+
+  deleteCardModal.setSubmitHandler(() => {
+    // runs when submitting the delete card modal
+    api.deleteCard(card._id);
+    this._element.remove();
+    this._element = null;
   });
+}
 
 // -------------------------------------------------------------------------------------
 // Validation
@@ -114,14 +174,6 @@ const enableValidation = (validationSettings) => {
   });
 };
 enableValidation(validationSettings);
-
-// -------------------------------------------------------------------------------------
-// Image Popup
-// -------------------------------------------------------------------------------------
-const imagePopup = new PopupWithImage("#image-modal");
-imagePopup.setEventListeners();
-
-const deleteCardPopup = new PopupWithConfirm(".delete-card-modal");
 
 // -------------------------------------------------------------------------------------
 // Handle Popup Close
@@ -168,65 +220,6 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
   },
 });
 profileEditPopup.setEventListeners();
-
-// -------------------------------------------------------------------------------------
-// Card adding to API & DOM
-// -------------------------------------------------------------------------------------
-function postCardToApi(cardData) {
-  return api.addCard(cardData).catch((error) => {
-    console.log("Failed to add card to the API:", error);
-    throw error;
-  });
-}
-
-function createCard(cardData) {
-  const card = new Card(cardData, cardTemplate);
-  return card.getView();
-}
-
-function addCardToSection(card) {
-  const cardSection = new Section({}, ".cards__list");
-  cardSection.prependItem(card);
-}
-
-const addCardPopup = new PopupWithForm("#add-card-modal", {
-  handleFormSubmit: (formData) => {
-    const cardData = {
-      name: formData["title"],
-      link: formData["Image URL"],
-    };
-
-    const isUploading = true;
-    addCardPopup.toggleUploadIndicator(isUploading);
-
-    postCardToApi(cardData)
-      .then((apiCardData) => {
-        const card = createCard(apiCardData);
-        addCardToSection(card);
-        resetAndClosePopup(addCardPopup);
-      })
-      .catch((error) => {
-        console.log("Error adding card:", error);
-      })
-      .finally(() => {
-        addCardPopup.toggleUploadIndicator(false);
-      });
-  },
-});
-
-addCardPopup.setEventListeners();
-
-// -------------------------------------------------------------------------------------
-// Card deletion from API & DOM
-// -------------------------------------------------------------------------------------
-//
-// on clicking the delete bin run function openDeleteModal() {instantiate new popup with form instance, calls .open on it to add the open modal class}
-// .then within this instance, make the submit button say "yes?" and ask "Are you sure?"
-// .then on clicking "yes", send delete request to the API for the triggering card
-// .then once promise is returned, make the already functioning DOM removal logic take place
-// .then close modal
-// .catch error if any
-//
 
 // -------------------------------------------------------------------------------------
 // Event Listeners
