@@ -11,6 +11,41 @@
   height: 120px;
   width: 120px;
   border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile__image::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1;
+}
+
+.avatar__edit-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 40px;
+  width: 40px;
+  background: url(../images/editIcon.png) center no-repeat;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease-in-out;
+  z-index: 2;
+}
+
+.profile__image:hover::before {
+  opacity: 1;
+}
+
+.profile__image:hover .avatar__edit-button {
+  opacity: 1;
 }
 
 .profile__info {
