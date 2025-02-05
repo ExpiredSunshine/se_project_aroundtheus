@@ -40,18 +40,13 @@ const userInfo = new UserInfo({
 // -------------------------------------------------------------------------------------
 // Inital UserInfo Population
 // -------------------------------------------------------------------------------------
-function fetchProfileData() {
-  return api.getProfileData();
-}
-function populateProfile(data) {
-  userInfo.setUserInfo({
-    name: data.name,
-    about: data.about,
-  });
-}
-fetchProfileData()
+api
+  .getProfileData()
   .then((data) => {
-    populateProfile(data);
+    userInfo.setUserInfo({
+      name: data.name,
+      about: data.about,
+    });
   })
   .catch((error) => {
     console.error("Failed to fetch profile data:", error);
@@ -122,6 +117,7 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
 
         cardSection.prependItem(card);
         resetAndClosePopup(addCardPopup);
+        // addCardPopup.close?
       })
       .catch((error) => console.error("Error adding card:", error))
       .finally(() => addCardPopup.toggleUploadIndicator(false));
