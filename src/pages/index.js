@@ -11,6 +11,7 @@ import UserInfo from "../components/UserInfo.js";
 import Api from "../components/api.js";
 import "../pages/index.css";
 import PopupWithConfirm from "../components/PopupWithConfirm.js";
+import UserAvatar from "../components/UserAvatar.js";
 
 // -------------------------------------------------------------------------------------
 // Selectors
@@ -50,6 +51,27 @@ api
   })
   .catch((error) => {
     console.error("Failed to fetch profile data:", error);
+  });
+
+// -------------------------------------------------------------------------------------
+// User Avatar Instance
+// -------------------------------------------------------------------------------------
+const userAvatar = new UserAvatar({
+  avatarSelector: ".profile__image",
+});
+
+// -------------------------------------------------------------------------------------
+// Inital User Avatar Population
+// -------------------------------------------------------------------------------------
+api
+  .getUserAvatar()
+  .then((data) => {
+    userAvatar.setUserAvatar({
+      avatar: data.avatar,
+    });
+  })
+  .catch((error) => {
+    console.error("Failed to fetch profile Avatar:", error);
   });
 
 // -------------------------------------------------------------------------------------
