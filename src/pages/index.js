@@ -19,6 +19,7 @@ import UserAvatar from "../components/UserAvatar.js";
 const profileEditButton = document.querySelector("#profile__edit-button");
 const profileNameInput = document.querySelector("#profile-name-input");
 const profileAboutInput = document.querySelector("#profile-description-input");
+const avatarEditButton = document.querySelector(".avatar__edit-button");
 const cardAddButton = document.querySelector(".profile__add-button");
 const cardTemplate = document.querySelector("#card-template");
 
@@ -73,6 +74,42 @@ api
   .catch((error) => {
     console.error("Failed to fetch profile Avatar:", error);
   });
+
+// -------------------------------------------------------------------------------------
+// Editing UserAvatar Popup
+// -------------------------------------------------------------------------------------
+// function patchProfileAvatarToApi(userInfo) {
+//   return api.editProfileData(userInfo).catch((error) => {
+//     console.log("Failed to update profile data:", error);
+//     throw error;
+//   });
+// }
+
+// function updateUserProfile(data) {
+//   userInfo.setUserInfo({
+//     name: data.name,
+//     about: data.about,
+//   });
+// }
+
+// const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
+//   handleFormSubmit: (userInfo) => {
+//     const isUploading = true;
+//     profileEditPopup.toggleUploadIndicator(isUploading);
+//     patchProfileDataToApi(userInfo)
+//       .then((userInfo) => {
+//         updateUserProfile(userInfo);
+//         resetAndClosePopup(profileEditPopup);
+//       })
+//       .catch((error) => {
+//         console.log("Error updating Profile:", error);
+//       })
+//       .finally(() => {
+//         profileEditPopup.toggleUploadIndicator(false);
+//       });
+//   },
+// });
+// profileEditPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
 // Image Popup Instance
@@ -138,8 +175,7 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
         ).getView();
 
         cardSection.prependItem(card);
-        resetAndClosePopup(addCardPopup);
-        // addCardPopup.close?
+        addCardPopup.close();
       })
       .catch((error) => console.error("Error adding card:", error))
       .finally(() => addCardPopup.toggleUploadIndicator(false));
@@ -188,40 +224,21 @@ const enableValidation = (validationSettings) => {
 enableValidation(validationSettings);
 
 // -------------------------------------------------------------------------------------
-// Handle Popup Close
-// -------------------------------------------------------------------------------------
-function resetAndClosePopup(popupInstance) {
-  const form = popupInstance.getForm();
-  form.reset();
-  formValidators[form.getAttribute("name")].toggleButtonState();
-  popupInstance.close();
-}
-
-// -------------------------------------------------------------------------------------
 // Editing UserInfo Popup
 // -------------------------------------------------------------------------------------
-function patchProfileDataToApi(userInfo) {
-  return api.editProfileData(userInfo).catch((error) => {
-    console.log("Failed to update profile data:", error);
-    throw error;
-  });
-}
-
-function updateUserProfile(data) {
-  userInfo.setUserInfo({
-    name: data.name,
-    about: data.about,
-  });
-}
-
 const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
-  handleFormSubmit: (userInfo) => {
+  handleFormSubmit: (formData) => {
     const isUploading = true;
     profileEditPopup.toggleUploadIndicator(isUploading);
-    patchProfileDataToApi(userInfo)
-      .then((userInfo) => {
-        updateUserProfile(userInfo);
-        resetAndClosePopup(profileEditPopup);
+
+    api
+      .editProfileData(formData)
+      .then((data) => {
+        userInfo.setUserInfo({
+          name: data.name,
+          about: data.about,
+        });
+        profileEditPopup.close();
       })
       .catch((error) => {
         console.log("Error updating Profile:", error);
@@ -231,6 +248,7 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
       });
   },
 });
+
 profileEditPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
@@ -242,6 +260,13 @@ profileEditButton.addEventListener("click", () => {
   profileAboutInput.value = about;
   formValidators["profile-form"].resetValidation();
   profileEditPopup.open();
+});
+
+avatarEditButton.addEventListener("click", () => {
+  const { avatar } = userAvatar.setUserAvatar();
+  avatarURLInput.value = avatar;
+  formValidators["avatar-form"].resetValidation();
+  avatarEditPopup.open();
 });
 
 cardAddButton.addEventListener("click", () => {
