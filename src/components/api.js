@@ -99,8 +99,6 @@ export default class Api {
   }
 }
 
-// GET https://around-api.en.tripleten-services.com/v1/users/me
-// PATCH https://around-api.en.tripleten-services.com/v1/users/me
 // PATCH https://around-api.en.tripleten-services.com/v1/users/me/avatar
 // DELETE https://around-api.en.tripleten-services.com/v1/cards/:cardId
 // PUT https://around-api.en.tripleten-services.com/v1/cards/:cardId/likes

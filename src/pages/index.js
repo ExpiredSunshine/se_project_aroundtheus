@@ -18,10 +18,17 @@ import UserAvatar from "../components/UserAvatar.js";
 // -------------------------------------------------------------------------------------
 const profileEditButton = document.querySelector("#profile__edit-button");
 const profileNameInput = document.querySelector("#profile-name-input");
+const avatarURLInput = document.querySelector("#image-URL-input");
 const profileAboutInput = document.querySelector("#profile-description-input");
 const avatarEditButton = document.querySelector(".avatar__edit-button");
 const cardAddButton = document.querySelector(".profile__add-button");
 const cardTemplate = document.querySelector("#card-template");
+
+// -------------------------------------------------------------------------------------
+// Image Popup Instance
+// -------------------------------------------------------------------------------------
+const imagePopup = new PopupWithImage("#image-modal");
+imagePopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
 // API Instance
@@ -55,6 +62,34 @@ api
   });
 
 // -------------------------------------------------------------------------------------
+// Editing UserInfo Popup
+// -------------------------------------------------------------------------------------
+const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
+  handleFormSubmit: (formData) => {
+    const isUploading = true;
+    profileEditPopup.toggleUploadIndicator(isUploading);
+
+    api
+      .editProfileData(formData)
+      .then((data) => {
+        userInfo.setUserInfo({
+          name: data.name,
+          about: data.about,
+        });
+        profileEditPopup.close();
+      })
+      .catch((error) => {
+        console.log("Error updating Profile:", error);
+      })
+      .finally(() => {
+        profileEditPopup.toggleUploadIndicator(false);
+      });
+  },
+});
+
+profileEditPopup.setEventListeners();
+
+// -------------------------------------------------------------------------------------
 // User Avatar Instance
 // -------------------------------------------------------------------------------------
 const userAvatar = new UserAvatar({
@@ -78,44 +113,29 @@ api
 // -------------------------------------------------------------------------------------
 // Editing UserAvatar Popup
 // -------------------------------------------------------------------------------------
-// function patchProfileAvatarToApi(userInfo) {
-//   return api.editProfileData(userInfo).catch((error) => {
-//     console.log("Failed to update profile data:", error);
-//     throw error;
-//   });
-// }
+const avatarEditPopup = new PopupWithForm("#avatar-edit-modal", {
+  handleFormSubmit: (formData) => {
+    const isUploading = true;
+    avatarEditPopup.toggleUploadIndicator(isUploading);
 
-// function updateUserProfile(data) {
-//   userInfo.setUserInfo({
-//     name: data.name,
-//     about: data.about,
-//   });
-// }
+    api
+      .editUserAvatar(formData)
+      .then((data) => {
+        userAvatar.setUserAvatar({
+          avatar: data.avatar,
+        });
+        avatarEditPopup.close();
+      })
+      .catch((error) => {
+        console.log("Error updating Avatar:", error);
+      })
+      .finally(() => {
+        avatarEditPopup.toggleUploadIndicator(false);
+      });
+  },
+});
 
-// const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
-//   handleFormSubmit: (userInfo) => {
-//     const isUploading = true;
-//     profileEditPopup.toggleUploadIndicator(isUploading);
-//     patchProfileDataToApi(userInfo)
-//       .then((userInfo) => {
-//         updateUserProfile(userInfo);
-//         resetAndClosePopup(profileEditPopup);
-//       })
-//       .catch((error) => {
-//         console.log("Error updating Profile:", error);
-//       })
-//       .finally(() => {
-//         profileEditPopup.toggleUploadIndicator(false);
-//       });
-//   },
-// });
-// profileEditPopup.setEventListeners();
-
-// -------------------------------------------------------------------------------------
-// Image Popup Instance
-// -------------------------------------------------------------------------------------
-const imagePopup = new PopupWithImage("#image-modal");
-imagePopup.setEventListeners();
+avatarEditPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
 // Card Section Instance
@@ -137,23 +157,19 @@ const cardSection = new Section(
 );
 
 // -------------------------------------------------------------------------------------
-// Card Creation & Rendering from API
+// Initial Card Creation & Rendering from API
 // -------------------------------------------------------------------------------------
-function renderCards() {
-  return api
-    .getCardList()
-    .then((cardList) => {
-      cardSection.renderItems(cardList);
-    })
-    .catch((error) => {
-      console.error("Failed to fetch or render cards:", error);
-    });
-}
-
-renderCards();
+api
+  .getCardList()
+  .then((cardList) => {
+    cardSection.renderItems(cardList);
+  })
+  .catch((error) => {
+    console.error("Failed to fetch or render cards:", error);
+  });
 
 // -------------------------------------------------------------------------------------
-// Card adding to API & DOM
+// Additional Card adding to API & DOM
 // -------------------------------------------------------------------------------------
 const addCardPopup = new PopupWithForm("#add-card-modal", {
   handleFormSubmit: (formData) => {
@@ -224,34 +240,6 @@ const enableValidation = (validationSettings) => {
 enableValidation(validationSettings);
 
 // -------------------------------------------------------------------------------------
-// Editing UserInfo Popup
-// -------------------------------------------------------------------------------------
-const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
-  handleFormSubmit: (formData) => {
-    const isUploading = true;
-    profileEditPopup.toggleUploadIndicator(isUploading);
-
-    api
-      .editProfileData(formData)
-      .then((data) => {
-        userInfo.setUserInfo({
-          name: data.name,
-          about: data.about,
-        });
-        profileEditPopup.close();
-      })
-      .catch((error) => {
-        console.log("Error updating Profile:", error);
-      })
-      .finally(() => {
-        profileEditPopup.toggleUploadIndicator(false);
-      });
-  },
-});
-
-profileEditPopup.setEventListeners();
-
-// -------------------------------------------------------------------------------------
 // Event Listeners
 // -------------------------------------------------------------------------------------
 profileEditButton.addEventListener("click", () => {
@@ -263,7 +251,7 @@ profileEditButton.addEventListener("click", () => {
 });
 
 avatarEditButton.addEventListener("click", () => {
-  const { avatar } = userAvatar.setUserAvatar();
+  const { avatar } = userAvatar.getUserAvatar();
   avatarURLInput.value = avatar;
   formValidators["avatar-form"].resetValidation();
   avatarEditPopup.open();
