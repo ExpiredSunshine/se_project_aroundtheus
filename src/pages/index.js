@@ -66,8 +66,7 @@ api
 // -------------------------------------------------------------------------------------
 const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
   handleFormSubmit: (formData) => {
-    const isUploading = true;
-    profileEditPopup.toggleUploadIndicator(isUploading);
+    profileEditPopup.toggleUploadIndicator(true);
 
     api
       .editProfileData(formData)
@@ -115,11 +114,11 @@ api
 // -------------------------------------------------------------------------------------
 const avatarEditPopup = new PopupWithForm("#avatar-edit-modal", {
   handleFormSubmit: (formData) => {
-    const isUploading = true;
-    avatarEditPopup.toggleUploadIndicator(isUploading);
+    const avatarURL = formData["Image URL"];
+    avatarEditPopup.toggleUploadIndicator(true);
 
     api
-      .editUserAvatar(formData)
+      .editUserAvatar({ avatar: avatarURL })
       .then((data) => {
         userAvatar.setUserAvatar({
           avatar: data.avatar,

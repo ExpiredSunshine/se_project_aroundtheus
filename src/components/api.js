@@ -84,6 +84,7 @@ export default class Api {
       return res.json();
     });
   }
+
   getUserAvatar() {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: {
@@ -96,6 +97,24 @@ export default class Api {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  editUserAvatar({ avatar }) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: {
+        authorization: this._authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        avatar,
+      }),
+    }).then((res) => {
+      if (!res.ok) {
+        return Promise.reject(`Error: ${res.status}`);
+      }
+      return res.json();
+    });
   }
 }
 
