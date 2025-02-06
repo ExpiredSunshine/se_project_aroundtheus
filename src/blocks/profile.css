@@ -13,35 +13,44 @@
   border-radius: 50%;
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
 .profile__image {
   height: 100%;
   width: 100%;
-}
-
-.profile__image-container::before,
-.avatar__edit-button {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+  position: relative;
   z-index: 1;
 }
 
-.avatar__edit-button {
-  background: url(../images/editIcon.png) center no-repeat;
-  width: 40px;
-  height: 40px;
-  inset: 0;
-  margin: auto;
+.profile__image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
   z-index: 2;
 }
 
-.profile__image-container:hover::before,
+.avatar__edit-button {
+  position: absolute;
+  background: url(../images/editIcon.png) center no-repeat;
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 3;
+}
+
+.profile__image-container:hover .profile__image-overlay,
 .profile__image-container:hover .avatar__edit-button {
   opacity: 1;
 }

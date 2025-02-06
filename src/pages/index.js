@@ -20,7 +20,7 @@ const profileEditButton = document.querySelector("#profile__edit-button");
 const profileNameInput = document.querySelector("#profile-name-input");
 const avatarURLInput = document.querySelector("#image-URL-input");
 const profileAboutInput = document.querySelector("#profile-description-input");
-const avatarEditButton = document.querySelector(".avatar__edit-button");
+const avatarEditButton = document.querySelector(".profile__image-container");
 const cardAddButton = document.querySelector(".profile__add-button");
 const cardTemplate = document.querySelector("#card-template");
 
