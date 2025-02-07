@@ -116,9 +116,34 @@ export default class Api {
       return res.json();
     });
   }
-}
 
-// PATCH https://around-api.en.tripleten-services.com/v1/users/me/avatar
-// DELETE https://around-api.en.tripleten-services.com/v1/cards/:cardId
-// PUT https://around-api.en.tripleten-services.com/v1/cards/:cardId/likes
-// DELETE https://around-api.en.tripleten-services.com/v1/cards/:cardId/likes
+  likeCard(cardId) {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+      method: "PUT",
+      headers: {
+        authorization: this._authToken,
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (!res.ok) {
+        return Promise.reject(`Error: ${res.status}`);
+      }
+      return res.json();
+    });
+  }
+
+  unlikeCard(cardId) {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+      method: "DELETE",
+      headers: {
+        authorization: this._authToken,
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (!res.ok) {
+        return Promise.reject(`Error: ${res.status}`);
+      }
+      return res.json();
+    });
+  }
+}

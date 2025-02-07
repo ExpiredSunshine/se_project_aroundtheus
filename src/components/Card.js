@@ -1,16 +1,19 @@
 export default class Card {
   constructor(
-    { name, link, _id },
+    { name, link, _id, isLiked },
     cardTemplate,
     handleImageClick,
-    handleTrashClick
+    handleTrashClick,
+    updateLike
   ) {
     this._name = name;
     this._link = link;
     this._id = _id;
+    this.isLiked = isLiked;
     this._cardTemplate = cardTemplate;
     this._handleImageClick = handleImageClick;
     this._handleTrashClick = handleTrashClick;
+    this._updateLike = updateLike;
     this._element = this._getTemplate();
     this._likeButton = this._element.querySelector(".card__like-button");
     this._deleteButton = this._element.querySelector(".card__delete-button");
@@ -29,7 +32,7 @@ export default class Card {
 
   _setEventListeners() {
     this._likeButton.addEventListener("click", () => {
-      this._handleCardLike();
+      this._updateLike(this);
     });
 
     this._deleteButton.addEventListener("click", () => {
@@ -48,6 +51,14 @@ export default class Card {
   _handleTrashClick() {
     this._deleteCardModal.classList.add("modal_opened");
     document.addEventListener("keydown", this._handleEscClose);
+  }
+
+  toggleIsLiked(isLiked) {
+    if (isLiked) {
+      this._handleCardLike();
+    } else {
+      this._handleCardLike();
+    }
   }
 
   getView() {

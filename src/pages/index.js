@@ -147,8 +147,14 @@ const cardSection = new Section(
         cardData,
         cardTemplate,
         (cardData) => imagePopup.open(cardData),
-        handleTrashClick
+        handleTrashClick,
+        updateLike
       ).getView();
+      if (cardData.isLiked) {
+        card
+          .querySelector(".card__like-button")
+          .classList.add("card__like-button_active");
+      }
       cardSection.appendItem(card);
     },
   },
@@ -186,7 +192,8 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
           apiCardData,
           cardTemplate,
           (data) => imagePopup.open(data),
-          handleTrashClick
+          handleTrashClick,
+          updateLike
         ).getView();
 
         cardSection.prependItem(card);
@@ -200,6 +207,36 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
 addCardPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
+// Card Liking
+// -------------------------------------------------------------------------------------
+
+function updateLike(card) {
+  const isCurrentlyLiked = card._likeButton.classList.contains(
+    "card__like-button_active"
+  );
+
+  if (isCurrentlyLiked) {
+    api
+      .unlikeCard(card._id)
+      .then(() => {
+        card.toggleIsLiked(false);
+      })
+      .catch((error) => {
+        console.error("Error unliking card:", error);
+      });
+  } else {
+    api
+      .likeCard(card._id)
+      .then(() => {
+        card.toggleIsLiked(true);
+      })
+      .catch((error) => {
+        console.error("Error liking card:", error);
+      });
+  }
+}
+
+// -------------------------------------------------------------------------------------
 // Card deletion from API & DOM
 // -------------------------------------------------------------------------------------
 const deleteCardModal = new PopupWithConfirm("#delete-card-modal", () => {});
@@ -207,7 +244,6 @@ deleteCardModal.setEventListeners();
 
 function handleTrashClick(card) {
   deleteCardModal.open();
-
   deleteCardModal.setSubmitHandler(() => {
     api
       .deleteCard(card._id)
