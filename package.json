@@ -1,5 +1,5 @@
 {
-  "name": "Around the US",
+  "name": "around_the_us",
   "version": "0.1.0",
   "description": "A picture sharing site.",
   "main": "index.js",
