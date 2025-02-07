@@ -12,6 +12,7 @@
   left: 0;
   padding: 0 19px;
   font-family: "Inter", Arial, Helvetica, sans-serif;
+  z-index: 5;
 }
 
 .modal_opened {

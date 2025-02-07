@@ -22,19 +22,23 @@
       </header>
       <main class="page__content">
         <section class="profile page__section">
-          <img
-            src="<%=require('./images/jacques-cousteau.jpg')%>"
-            alt="Profile image of Jacques Cousteau"
-            class="profile__image"
-          />
+          <div class="profile__image-container">
+            <img
+              src="<%=require%>"
+              alt="Profile image"
+              class="profile__image"
+            />
+            <div class="profile__image-overlay"></div>
+            <div type="Button" class="avatar__edit-button"></div>
+          </div>
           <div class="profile__info">
-            <h1 class="profile__name">Jacques Cousteau</h1>
+            <h1 class="profile__name">Your Name</h1>
             <button
               type="button"
               class="profile__edit-button"
               id="profile__edit-button"
             ></button>
-            <p class="profile__description">Explorer</p>
+            <p class="profile__description">About You</p>
           </div>
           <button type="button" class="profile__add-button"></button>
         </section>
@@ -46,7 +50,7 @@
         <p class="footer__copyright">© 2024 A.J. Croft</p>
       </footer>
     </div>
-    <!-- Edit Profile Modal -->
+    <!-- Profile Edit Modal -->
     <div class="modal" id="profile-edit-modal">
       <div class="modal__container">
         <div class="modal__close" id="profile__modal-close"></div>
@@ -69,7 +73,7 @@
           <span class="modal__error" id="profile-name-input-error"></span>
           <input
             class="modal__input"
-            name="description"
+            name="about"
             id="profile-description-input"
             placeholder="Description"
             type="text"
@@ -85,6 +89,37 @@
             class="modal__button modal__button_disabled"
             type="submit"
             disabled
+          >
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+    <!-- Avatar Edit Modal -->
+    <div class="modal" id="avatar-edit-modal">
+      <div class="modal__container">
+        <div class="modal__close" id="avatar__modal-close"></div>
+        <h3 class="modal__heading">Change Profile Picture</h3>
+        <form
+          class="modal__form form-selector"
+          id="avatar-form"
+          name="avatar-form"
+        >
+          <input
+            class="modal__input"
+            name="Image URL"
+            id="image-URL-input"
+            placeholder="Image URL"
+            type="url"
+            required
+          />
+          <span class="modal__error" id="image-URL-input-error"></span>
+          <button
+            disabled
+            id="avatar__submit"
+            class="modal__button modal__button_disabled"
+            name="submit__button"
+            type="submit"
           >
             Save
           </button>
@@ -132,6 +167,18 @@
         </form>
       </div>
     </div>
+    <!-- Delete Card Modal -->
+    <div class="modal" id="delete-card-modal">
+      <div class="modal__container delete__modal_container">
+        <div class="modal__close" id="card__modal-close"></div>
+        <h3 class="modal__heading">Are you sure?</h3>
+        <form class="modal__form">
+          <button class="modal__button" name="submit__button" type="submit">
+            Yes
+          </button>
+        </form>
+      </div>
+    </div>
     <!-- View Image Modal -->
     <div class="modal" id="image-modal">
       <div class="modal__container image__modal_container">
@@ -151,7 +198,5 @@
         </div>
       </li>
     </template>
-
-    <!-- <script src="./pages/index.js" defer type="module"></script> -->
   </body>
 </html>
