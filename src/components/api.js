@@ -1,4 +1,4 @@
-export default class Api {
+export default class API {
   constructor({ baseUrl, authToken }) {
     this._baseUrl = baseUrl;
     this._authToken = authToken;
@@ -9,13 +9,9 @@ export default class Api {
       headers: {
         authorization: this._authToken,
       },
-    })
-      .then((res) =>
-        res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-      )
-      .catch((err) => {
-        console.log(err);
-      });
+    }).then((res) =>
+      res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
+    );
   }
 
   addCard({ name, link }) {
@@ -57,13 +53,9 @@ export default class Api {
       headers: {
         authorization: this._authToken,
       },
-    })
-      .then((res) =>
-        res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-      )
-      .catch((err) => {
-        console.log(err);
-      });
+    }).then((res) =>
+      res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
+    );
   }
 
   editProfileData({ name, about }) {
@@ -90,13 +82,9 @@ export default class Api {
       headers: {
         authorization: this._authToken,
       },
-    })
-      .then((res) =>
-        res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
-      )
-      .catch((err) => {
-        console.log(err);
-      });
+    }).then((res) =>
+      res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
+    );
   }
 
   editUserAvatar({ avatar }) {

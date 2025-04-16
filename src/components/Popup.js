@@ -20,16 +20,6 @@ export default class Popup {
     document.removeEventListener("keydown", this._handleEscClose);
   }
 
-  toggleUploadIndicator(isUploading) {
-    if (isUploading) {
-      this._submitButton.textContent = "Saving...";
-      this._submitButton.disabled = true;
-    } else {
-      this._submitButton.textContent = "Save";
-      this._submitButton.disabled = false;
-    }
-  }
-
   setEventListeners() {
     this._popup.addEventListener("mousedown", (event) => {
       if (

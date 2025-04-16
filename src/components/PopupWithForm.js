@@ -23,6 +23,16 @@ export default class PopupWithForm extends Popup {
     });
   }
 
+  toggleUploadIndicator(isUploading) {
+    if (isUploading) {
+      this._submitButton.textContent = "Saving...";
+      this._submitButton.disabled = true;
+    } else {
+      this._submitButton.textContent = "Save";
+      this._submitButton.disabled = false;
+    }
+  }
+
   getForm() {
     return this._form;
   }

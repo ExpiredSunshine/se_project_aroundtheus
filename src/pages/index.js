@@ -8,7 +8,7 @@ import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
-import Api from "../components/api.js";
+import API from "../components/API.js";
 import "../pages/index.css";
 import PopupWithConfirm from "../components/PopupWithConfirm.js";
 import UserAvatar from "../components/UserAvatar.js";
@@ -33,7 +33,7 @@ imagePopup.setEventListeners();
 // -------------------------------------------------------------------------------------
 // API Instance
 // -------------------------------------------------------------------------------------
-const api = new Api({
+const api = new API({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
   authToken: "b656ee04-ff76-4b23-b20a-1e4991fc7f99",
 });
@@ -75,13 +75,13 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
           name: data.name,
           about: data.about,
         });
-        profileEditPopup.close();
       })
       .catch((error) => {
         console.log("Error updating Profile:", error);
       })
       .finally(() => {
         profileEditPopup.toggleUploadIndicator(false);
+        profileEditPopup.close();
       });
   },
 });
@@ -123,13 +123,13 @@ const avatarEditPopup = new PopupWithForm("#avatar-edit-modal", {
         userAvatar.setUserAvatar({
           avatar: data.avatar,
         });
-        avatarEditPopup.close();
       })
       .catch((error) => {
         console.log("Error updating Avatar:", error);
       })
       .finally(() => {
         avatarEditPopup.toggleUploadIndicator(false);
+        avatarEditPopup.close();
       });
   },
 });
@@ -195,8 +195,9 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
           handleTrashClick,
           updateLike
         ).getView();
-
         cardSection.prependItem(card);
+        const validator = formValidators["add-card-form"];
+        validator.resetValidation();
         addCardPopup.close();
       })
       .catch((error) => console.error("Error adding card:", error))
@@ -211,7 +212,7 @@ addCardPopup.setEventListeners();
 // -------------------------------------------------------------------------------------
 
 function updateLike(card) {
-  const isCurrentlyLiked = card._likeButton.classList.contains(
+  const isCurrentlyLiked = card.likeButton.classList.contains(
     "card__like-button_active"
   );
 
@@ -248,11 +249,11 @@ function handleTrashClick(card) {
     api
       .deleteCard(card._id)
       .then(() => {
-        card._element.remove();
-        card._element = null;
-        deleteCardModal.close();
+        card.element.remove();
+        card.element = null;
       })
       .catch((error) => console.error("Failed to delete card:", error));
+    deleteCardModal.close();
   });
 }
 
