@@ -67,6 +67,11 @@ export default class Card {
     this.likeButton.classList.toggle("card__like-button_active", this.isLiked);
   }
 
+  setLikedState(isLiked) {
+    this.isLiked = isLiked;
+    this._updateLikeButton();
+  }
+
   getView() {
     this._cardTitle.textContent = this._name;
     this._cardImage.src = this._link;

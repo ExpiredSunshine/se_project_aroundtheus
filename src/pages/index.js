@@ -125,19 +125,15 @@ const cardSection = new Section(
   {
     items: [],
     renderer: (cardData) => {
-      const card = new Card(
+      const cardInstance = new Card(
         cardData,
         cardTemplate,
         (cardData) => imagePopup.open(cardData),
         handleTrashClick,
         api
-      ).getView();
-      if (cardData.isLiked) {
-        card
-          .querySelector(".card__like-button")
-          .classList.add("card__like-button_active");
-      }
-      cardSection.appendItem(card);
+      );
+      cardInstance.setLikedState(cardData.isLiked);
+      cardSection.appendItem(cardInstance.getView());
     },
   },
   ".cards__list"
