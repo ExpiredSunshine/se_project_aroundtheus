@@ -4,7 +4,7 @@ export default class Card {
     cardTemplate,
     handleImageClick,
     handleTrashClick,
-    updateLike
+    api
   ) {
     this._name = name;
     this._link = link;
@@ -13,7 +13,7 @@ export default class Card {
     this._cardTemplate = cardTemplate;
     this._handleImageClick = handleImageClick;
     this._handleTrashClick = handleTrashClick;
-    this._updateLike = updateLike;
+    this._api = api;
     this.element = this._getTemplate();
     this.likeButton = this.element.querySelector(".card__like-button");
     this._deleteButton = this.element.querySelector(".card__delete-button");
@@ -32,7 +32,7 @@ export default class Card {
 
   _setEventListeners() {
     this.likeButton.addEventListener("click", () => {
-      this._updateLike(this);
+      this._handleLikeClick(this);
     });
 
     this._deleteButton.addEventListener("click", () => {
@@ -44,8 +44,24 @@ export default class Card {
     });
   }
 
-  _handleCardLike() {
-    this.likeButton.classList.toggle("card__like-button_active");
+  _handleLikeClick() {
+    if (this.isLiked) {
+      this._api
+        .unlikeCard(this._id)
+        .then(() => {
+          this.isLiked = false;
+          this._updateLikeButton();
+        })
+        .catch((error) => console.error("Error unliking card:", error));
+    } else {
+      this._api
+        .likeCard(this._id)
+        .then(() => {
+          this.isLiked = true;
+          this._updateLikeButton();
+        })
+        .catch((error) => console.error("Error liking card:", error));
+    }
   }
 
   _handleTrashClick() {
@@ -53,18 +69,17 @@ export default class Card {
     document.addEventListener("keydown", this._handleEscClose);
   }
 
-  toggleIsLiked(isLiked) {
-    if (isLiked) {
-      this._handleCardLike();
-    } else {
-      this._handleCardLike();
-    }
+  _updateLikeButton() {
+    this.likeButton.classList.toggle("card__like-button_active", this.isLiked);
   }
 
   getView() {
     this._cardTitle.textContent = this._name;
     this._cardImage.src = this._link;
     this._cardImage.alt = this._name;
+    if (this.isLiked) {
+      this.likeButton.classList.add("card__like-button_active");
+    }
     return this.element;
   }
 }

@@ -128,7 +128,7 @@ const cardSection = new Section(
         cardTemplate,
         (cardData) => imagePopup.open(cardData),
         handleTrashClick,
-        updateLike
+        api
       ).getView();
       if (cardData.isLiked) {
         card
@@ -173,7 +173,7 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
           cardTemplate,
           (data) => imagePopup.open(data),
           handleTrashClick,
-          updateLike
+          api
         ).getView();
         cardSection.prependItem(card);
         const validator = formValidators["add-card-form"];
@@ -186,36 +186,6 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
 });
 
 addCardPopup.setEventListeners();
-
-// -------------------------------------------------------------------------------------
-// Card Liking
-// -------------------------------------------------------------------------------------
-
-function updateLike(card) {
-  const isCurrentlyLiked = card.likeButton.classList.contains(
-    "card__like-button_active"
-  );
-
-  if (isCurrentlyLiked) {
-    api
-      .unlikeCard(card._id)
-      .then(() => {
-        card.toggleIsLiked(false);
-      })
-      .catch((error) => {
-        console.error("Error unliking card:", error);
-      });
-  } else {
-    api
-      .likeCard(card._id)
-      .then(() => {
-        card.toggleIsLiked(true);
-      })
-      .catch((error) => {
-        console.error("Error liking card:", error);
-      });
-  }
-}
 
 // -------------------------------------------------------------------------------------
 // Card deletion from API & DOM
