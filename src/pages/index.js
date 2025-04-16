@@ -204,9 +204,9 @@ function handleTrashClick(card) {
       .then(() => {
         card.element.remove();
         card.element = null;
+        deleteCardModal.close();
       })
       .catch((error) => console.error("Failed to delete card:", error));
-    deleteCardModal.close();
   });
 }
 
