@@ -76,13 +76,14 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
       .editProfileData(formData)
       .then((data) => {
         userInfo.setUserInfo(data);
+        profileEditPopup.getForm().reset();
+        profileEditPopup.close();
       })
       .catch((error) => {
         console.log("Error updating Profile:", error);
       })
       .finally(() => {
         profileEditPopup.toggleUploadIndicator(false);
-        profileEditPopup.close();
       });
   },
 });
@@ -103,13 +104,14 @@ const avatarEditPopup = new PopupWithForm("#avatar-edit-modal", {
         userInfo.setUserInfo({
           avatar: data.avatar,
         });
+        avatarEditPopup.getForm().reset();
+        avatarEditPopup.close();
       })
       .catch((error) => {
         console.log("Error updating Avatar:", error);
       })
       .finally(() => {
         avatarEditPopup.toggleUploadIndicator(false);
-        avatarEditPopup.close();
       });
   },
 });
@@ -178,6 +180,7 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
         cardSection.prependItem(card);
         const validator = formValidators["add-card-form"];
         validator.resetValidation();
+        addCardPopup.getForm().reset();
         addCardPopup.close();
       })
       .catch((error) => console.error("Error adding card:", error))
