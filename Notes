@@ -1,1 +1,174 @@
+next feedback
 
+
+
+src/components/Card.js
+    this._deleteButton = this.element.querySelector(".card__delete-button");
+    this._cardImage = this.element.querySelector(".card__image");
+    this._cardTitle = this.element.querySelector(".card__title");
+    this._deleteCardModal = document.querySelector("#delete-card-modal");
+
+
+
+
+    this._deleteCardModal = document.querySelector("#delete-card-modal");
+
+    It's not needed because _handleTrashClick is not needed in line 67
+
+
+
+next feedback
+
+
+
+src/components/Card.js
+  _handleCardDelete() {
+    this._element.remove();
+    this._element = null;
+  _handleTrashClick() {
+
+
+
+
+    Please, delete it from Card.js because any modal should be created in index.js using a class extended from Popup. There are open and _handleEscClose methods for that
+
+    _handleTrashClick is not needed here because you reassign it in the constructor in line 15
+
+
+    next feedback
+
+    src/components/PopupWithForm.js
+    @@ -1,4 +1,4 @@
+    import Popup from "./Popup";
+    import Popup from "./Popup.js";
+
+    export default class PopupWithForm extends Popup {
+      constructor(popupSelector, { handleFormSubmit }) {
+
+
+
+        this._form.reset();
+        this.close();
+
+        Please, delete them from lines 35 and 36 from PopupWithForm
+
+        You need to close modals only in then blocks after a successful response from the server so that when there is an error, it would be opened (the inputs will not be cleared and the user could send the data again to the server), and if you change the button text, you could see the change as well. Please, correct it everywhere in the code
+
+        You need to reset the form only in a then block in order not to do that immediately after submit because when there is an error, the modal will still be opened, and the user can try to send the data again to the server without having to type the data into the inputs once more.
+
+
+        next feedback
+
+        src/components/UserAvatar.js
+        @@ -0,0 +1,13 @@
+        export default class UserAvatar {
+
+          Please, delete the UserAvatar class, not to mislead
+
+
+          next feedback
+
+          src/pages/index.js
+        })
+        .finally(() => {
+          profileEditPopup.toggleUploadIndicator(false);
+          profileEditPopup.close();
+
+
+
+          profileEditPopup.close();
+
+          You need to close modals only in then blocks after a successful response from the server so that when there is an error, it would be opened (the inputs will not be cleared and the user could send the data again to the server), and if you change the button text, you could see the change as well. Please, correct it everywhere in the code
+
+          next feedback
+
+          src/pages/index.js
+        })
+        .finally(() => {
+          avatarEditPopup.toggleUploadIndicator(false);
+          avatarEditPopup.close();
+          You need to close modals only in then blocks after a successful response from the server so that when there is an error, it would be opened (the inputs will not be cleared and the user could send the data again to the server), and if you change the button text, you could see the change as well. Please, correct it everywhere in the code
+
+
+          next feedback
+
+
+          src/pages/index.js
+          Comment on lines +154 to +156
+          card
+          .querySelector(".card__like-button")
+          .classList.add("card__like-button_active");
+
+
+
+          Now only class Card knows every card selector, so you need to encapsulate the likes logics inside its methods and call them in index.js. It’s a violation of Single responsibility principle
+
+          You can't search the like button here. It's been found inside Card, so you need to do it inside Card
+
+
+   next feedback
+
+
+   src/pages/index.js
+   Comment on lines +135 to +136
+   .querySelector(".card__like-button")
+   .classList.add("card__like-button_active");
+
+
+
+   Now only class Card knows every card selector, so you need to encapsulate the likes logics inside its methods and call them in index.js. It’s a violation of Single responsibility principle
+
+   You can't search the like button here. It's been found inside Card, so you need to do it inside Card
+
+
+   next feedback
+
+
+   src/pages/index.js
+   api
+   .addCard(cardData)
+   .then((apiCardData) => {
+     const card = new Card(
+
+       You should make a special function createCard for creating a card not to copy-paste the code when you need to add a new card with append.
+
+       function createCard(item) {
+         // here will be the code of creating
+         return cardElement.getView();
+        }
+        next feedback
+
+
+        src/pages/index.js
+        card.element = null;
+      })
+      .catch((error) => console.error("Failed to delete card:", error));
+      deleteCardModal.close();
+
+      You need to close modals only in then blocks after a successful response from the server so that when there is an error, it would be opened (the inputs will not be cleared and the user could send the data again to the server), and if you change the button text, you could see the change as well. Please, correct it everywhere in the code
+
+      next feedback
+
+
+      src/pages/index.js
+      {
+        items: [],
+        renderer: (cardData) => {
+          const card = new Card(
+
+            You should make a special function createCard for creating a card not to copy-paste the code when you need to add a new card with append.
+
+            function createCard(item) {
+              // here will be the code of creating
+              return cardElement.getView();
+            }
+
+            So, here will be
+
+            renderer: (cardData) => {
+              const card = createCard(cardData);
+              cardSection.appendItem(card);
+            },
+
+
+            next feedback

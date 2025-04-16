@@ -19,7 +19,6 @@ export default class Card {
     this._deleteButton = this.element.querySelector(".card__delete-button");
     this._cardImage = this.element.querySelector(".card__image");
     this._cardTitle = this.element.querySelector(".card__title");
-    this._deleteCardModal = document.querySelector("#delete-card-modal");
     this._setEventListeners();
   }
 
@@ -62,11 +61,6 @@ export default class Card {
         })
         .catch((error) => console.error("Error liking card:", error));
     }
-  }
-
-  _handleTrashClick() {
-    this._deleteCardModal.classList.add("modal_opened");
-    document.addEventListener("keydown", this._handleEscClose);
   }
 
   _updateLikeButton() {
