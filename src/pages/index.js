@@ -11,7 +11,6 @@ import UserInfo from "../components/UserInfo.js";
 import API from "../components/API.js";
 import "../pages/index.css";
 import PopupWithConfirm from "../components/PopupWithConfirm.js";
-import UserAvatar from "../components/UserAvatar.js";
 
 // -------------------------------------------------------------------------------------
 // Selectors
@@ -35,7 +34,10 @@ imagePopup.setEventListeners();
 // -------------------------------------------------------------------------------------
 const api = new API({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
-  authToken: "b656ee04-ff76-4b23-b20a-1e4991fc7f99",
+  headers: {
+    authorization: "b656ee04-ff76-4b23-b20a-1e4991fc7f99",
+    "Content-Type": "application/json",
+  },
 });
 
 // -------------------------------------------------------------------------------------
@@ -44,6 +46,7 @@ const api = new API({
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   aboutSelector: ".profile__description",
+  avatarSelector: ".profile__image",
 });
 
 // -------------------------------------------------------------------------------------
@@ -55,6 +58,7 @@ api
     userInfo.setUserInfo({
       name: data.name,
       about: data.about,
+      avatar: data.avatar,
     });
   })
   .catch((error) => {
@@ -71,10 +75,7 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
     api
       .editProfileData(formData)
       .then((data) => {
-        userInfo.setUserInfo({
-          name: data.name,
-          about: data.about,
-        });
+        userInfo.setUserInfo(data);
       })
       .catch((error) => {
         console.log("Error updating Profile:", error);
@@ -89,27 +90,6 @@ const profileEditPopup = new PopupWithForm("#profile-edit-modal", {
 profileEditPopup.setEventListeners();
 
 // -------------------------------------------------------------------------------------
-// User Avatar Instance
-// -------------------------------------------------------------------------------------
-const userAvatar = new UserAvatar({
-  avatarSelector: ".profile__image",
-});
-
-// -------------------------------------------------------------------------------------
-// Inital User Avatar Population
-// -------------------------------------------------------------------------------------
-api
-  .getUserAvatar()
-  .then((data) => {
-    userAvatar.setUserAvatar({
-      avatar: data.avatar,
-    });
-  })
-  .catch((error) => {
-    console.error("Failed to fetch profile Avatar:", error);
-  });
-
-// -------------------------------------------------------------------------------------
 // Editing UserAvatar Popup
 // -------------------------------------------------------------------------------------
 const avatarEditPopup = new PopupWithForm("#avatar-edit-modal", {
@@ -120,7 +100,7 @@ const avatarEditPopup = new PopupWithForm("#avatar-edit-modal", {
     api
       .editUserAvatar({ avatar: avatarURL })
       .then((data) => {
-        userAvatar.setUserAvatar({
+        userInfo.setUserInfo({
           avatar: data.avatar,
         });
       })
@@ -287,7 +267,7 @@ profileEditButton.addEventListener("click", () => {
 });
 
 avatarEditButton.addEventListener("click", () => {
-  const { avatar } = userAvatar.getUserAvatar();
+  const { avatar } = userInfo.getUserInfo();
   avatarURLInput.value = avatar;
   formValidators["avatar-form"].resetValidation();
   avatarEditPopup.open();

@@ -1,13 +1,1 @@
-    You need to disable the submit button in the card form if the inputs are empty. It’s needed because I can click the button and add an empty card, but it should not happen. After the first submission, the button gets activated, and you need to deactivate it again. Even if I can't add an empty card, the button should look disabled (gray) anyway and have a disabled attribute.
-
-    The code of ok checking is repeated in every request of the project. To avoid it you need to make a special method _checkResponse that will check any response from the server if it’s ok or not.
-
-    According to the task you need to pass full headers into the constructor of Api. See here https://snipboard.io/pRdaAZ.jpg . And in the code you need to use only: headers: this._headers (not to duplicate the code)
-
-    You need to reset the form only in a then block in order not to do that immediately after submit because when there is an error, the modal will still be opened, and the user can try to send the data again to the server without having to type the data into the inputs once more.
-
-    UserAvatar is not needed because UserInfo should set/get the profile data (including the avatar)
-
-    getUserAvatar is not needed because getProfileData has the avatar in its response from the server
-
-    Now only class Card knows every card selector, so you need to encapsulate the likes logics inside its methods and call them in index.js. It’s a violation of Single responsibility principle
+Now only class Card knows every card selector, so you need to encapsulate the likes logics inside its methods and call them in index.js. It’s a violation of Single responsibility principle
