@@ -50,6 +50,21 @@ const userInfo = new UserInfo({
 });
 
 // -------------------------------------------------------------------------------------
+// Create Card function
+// -------------------------------------------------------------------------------------
+function createCard(cardData) {
+  const card = new Card(
+    cardData,
+    cardTemplate,
+    (data) => imagePopup.open(data),
+    handleTrashClick,
+    api
+  );
+  card.setLikedState(cardData.isLiked);
+  return card;
+}
+
+// -------------------------------------------------------------------------------------
 // Inital UserInfo Population
 // -------------------------------------------------------------------------------------
 api
@@ -125,15 +140,8 @@ const cardSection = new Section(
   {
     items: [],
     renderer: (cardData) => {
-      const cardInstance = new Card(
-        cardData,
-        cardTemplate,
-        (cardData) => imagePopup.open(cardData),
-        handleTrashClick,
-        api
-      );
-      cardInstance.setLikedState(cardData.isLiked);
-      cardSection.appendItem(cardInstance.getView());
+      const card = createCard(cardData);
+      cardSection.appendItem(card.getView());
     },
   },
   ".cards__list"
@@ -166,13 +174,7 @@ const addCardPopup = new PopupWithForm("#add-card-modal", {
     api
       .addCard(cardData)
       .then((apiCardData) => {
-        const card = new Card(
-          apiCardData,
-          cardTemplate,
-          (data) => imagePopup.open(data),
-          handleTrashClick,
-          api
-        ).getView();
+        const card = createCard(apiCardData).getView();
         cardSection.prependItem(card);
         const validator = formValidators["add-card-form"];
         validator.resetValidation();
