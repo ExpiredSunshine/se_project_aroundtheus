@@ -245,5 +245,6 @@ avatarEditButton.addEventListener("click", () => {
 });
 
 cardAddButton.addEventListener("click", () => {
-  addCardPopup.open(true);
+  formValidators["add-card-form"].resetValidation();
+  addCardPopup.open();
 });
