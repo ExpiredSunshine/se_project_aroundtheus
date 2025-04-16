@@ -1,1 +1,1 @@
-Now only class Card knows every card selector, so you need to encapsulate the likes logics inside its methods and call them in index.js. It’s a violation of Single responsibility principle
+
